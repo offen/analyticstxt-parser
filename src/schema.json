@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "definitions": {
+    "listOfStrings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "properties": {
+    "author": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "collects": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "stores": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "uses": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "allows": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "retains": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "honors": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "tracks": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "varies": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "shares": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "implements": {
+      "$ref": "#/definitions/listOfStrings"
+    },
+    "deploys": {
+      "$ref": "#/definitions/listOfStrings"
+    }
+  },
+  "required": [
+    "author",
+    "collects",
+    "stores",
+    "uses",
+    "allows",
+    "retains"
+  ],
+  "additionalProperties": false
+}
