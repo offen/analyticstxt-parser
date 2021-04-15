@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "tape test/test.js",
-    "posttest": "standard"
+    "posttest": "standard",
+    "preversion": "npm test",
+    "version": "changes --commits",
+    "postversion": "git push --follow-tags && npm publish"
   },
   "repository": {
     "type": "git",
@@ -26,6 +29,7 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
+    "@studio/changes": "^2.1.0",
     "standard": "^16.0.3",
     "tape": "^5.2.2"
   }
