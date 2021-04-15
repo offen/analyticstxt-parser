@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+/**
+ * Copyright 2021 - Offen Authors <hioffen@posteo.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const fs = require('fs')
 const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))

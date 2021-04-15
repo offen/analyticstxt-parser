@@ -1,3 +1,8 @@
+/**
+ * Copyright 2021 - Offen Authors <hioffen@posteo.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const tape = require('tape')
 
 const { validate } = require('./../src/index')

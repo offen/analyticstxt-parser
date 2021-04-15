@@ -1,3 +1,8 @@
+/**
+ * Copyright 2021 - Offen Authors <hioffen@posteo.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 const Ajv = require('ajv')
 const addFormats = require('ajv-formats')
 
