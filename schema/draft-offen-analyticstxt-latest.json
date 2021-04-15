@@ -1,8 +1,26 @@
 {
   "title": "analytics.txt",
   "definitions": {
-    "listOfStrings": {
+    "noneType": {
       "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["none"]
+      },
+      "uniqueItems": true
+    },
+    "singleItem": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "nonEmptyList": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
       "items": {
         "type": "string"
       }
@@ -11,42 +29,201 @@
   "oneOf": [
     {
       "type": "object",
+      "description": "A declaration with data being collected",
       "properties": {
         "author": {
-          "$ref": "#/definitions/listOfStrings"
+          "$ref": "#/definitions/singleItem"
         },
         "collects": {
-          "$ref": "#/definitions/listOfStrings"
+          "allOf": [
+            {
+              "$ref": "#/definitions/nonEmptyList"
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "ip-address",
+                  "geo-location",
+                  "user-agent",
+                  "fingerprint",
+                  "device-type", "url",
+                  "referrer",
+                  "visit-duration",
+                  "custom-events",
+                  "session-recording"
+                ]
+              }
+            }
+          ]
         },
         "stores": {
-          "$ref": "#/definitions/listOfStrings"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/noneType"
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "first-party-cookies",
+                  "third-party-cookies",
+                  "local-storage",
+                  "cache"
+                ]
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
         },
         "uses": {
-          "$ref": "#/definitions/listOfStrings"
+          "allOf": [
+            {
+              "$ref": "#/definitions/nonEmptyList"
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "javascript",
+                  "pixel",
+                  "server-side",
+                  "logs",
+                  "other"
+                ]
+              }
+            }
+          ]
         },
         "allows": {
-          "$ref": "#/definitions/listOfStrings"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/noneType"
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/nonEmptyList"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "opt-in",
+                      "opt-out"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         "retains": {
-          "$ref": "#/definitions/listOfStrings"
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 1
         },
         "honors": {
-          "$ref": "#/definitions/listOfStrings"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/noneType"
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/nonEmptyList"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "do-not-track",
+                      "global-privacy-control"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         "tracks": {
-          "$ref": "#/definitions/listOfStrings"
+          "allOf": [
+            {
+              "$ref": "#/definitions/nonEmptyList"
+            },
+            {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "anonymous"
+                    ]
+                  }
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "sessions",
+                      "users"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         "varies": {
-          "$ref": "#/definitions/listOfStrings"
+          "allOf": [
+            {
+              "$ref": "#/definitions/singleItem"
+            },
+            {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "none",
+                  "random",
+                  "behavioral"
+                ]
+              }
+            }
+          ]
         },
         "shares": {
-          "$ref": "#/definitions/listOfStrings"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/noneType"
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/nonEmptyList"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "per-user",
+                      "general-public",
+                      "third-party"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
         "implements": {
-          "$ref": "#/definitions/listOfStrings"
+          "$ref": "#/definitions/nonEmptyList"
         },
         "deploys": {
-          "$ref": "#/definitions/listOfStrings"
+          "$ref": "#/definitions/nonEmptyList"
         }
       },
       "required": [
@@ -61,14 +238,14 @@
     },
     {
       "type": "object",
+      "description": "A file declaring that no data is collected",
       "properties": {
         "author": {
-          "$ref": "#/definitions/listOfStrings"
+          "$ref": "#/definitions/singleItem"
         },
         "collects": {
           "type": "array",
           "items": {
-            "type": "string",
             "enum": ["none"]
           }
         }
