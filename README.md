@@ -1,6 +1,6 @@
 # analyticstxt-parser
 
-A JSON schema, a Node.js library and a CLI tool to parse and validate [analytics.txt][] files.
+JSON schema based Node.js library and CLI tool to parse and validate [analytics.txt][] files.
 
 [analytics.txt]: https://www.analyticstxt.org
 

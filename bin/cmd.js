@@ -12,7 +12,7 @@ const argv = require('minimist')(process.argv.slice(2))
 const pkg = require('../package')
 const { validate, defaultVersion } = require('..')
 
-const subcommand = argv._[0] || 'help'
+const [subcommand = 'help'] = argv._
 
 ;(async () => {
   switch (subcommand) {
@@ -21,7 +21,7 @@ const subcommand = argv._[0] || 'help'
 
     case 'validate': {
       const draftName = argv.d || argv.draft || defaultVersion
-      const file = argv._[1]
+      const [, file] = argv._
       const readFromStdin = file === '-'
       if (!file) {
         throw new Error(
