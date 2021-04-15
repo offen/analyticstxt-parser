@@ -1,0 +1,83 @@
+{
+  "title": "analytics.txt",
+  "definitions": {
+    "listOfStrings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "collects": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "stores": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "uses": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "allows": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "retains": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "honors": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "tracks": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "varies": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "shares": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "implements": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "deploys": {
+          "$ref": "#/definitions/listOfStrings"
+        }
+      },
+      "required": [
+        "author",
+        "collects",
+        "stores",
+        "uses",
+        "allows",
+        "retains"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/listOfStrings"
+        },
+        "collects": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["none"]
+          }
+        }
+      },
+      "required": [
+        "author",
+        "collects"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

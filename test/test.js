@@ -28,3 +28,13 @@ Deploys: offen
   t.equal(result, null)
   t.end()
 })
+
+tape.test('valid empty', t => {
+  const fixture = `
+Author: Frederik Ring <hioffen@posteo.de>
+Collects: none
+`
+  const result = validate(fixture)
+  t.equal(result, null)
+  t.end()
+})

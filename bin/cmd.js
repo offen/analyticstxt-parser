@@ -5,17 +5,17 @@ const fs = require('fs')
 const { validate } = require('..')
 
 const subcommand = process.argv[2]
-const file = process.argv[3] || process.stdin.fd
+const file = process.argv[3]
 
-const draftName = 'draft-offen-analyticstxt-00'
+const draftName = 'draft-offen-analyticstxt-latest'
 
 ;(async () => {
   switch (subcommand) {
     case 'validate': {
-      const content = fs.readFileSync(file, 'utf-8')
+      const content = fs.readFileSync(file !== '-' ? file : process.stdin.fd, 'utf-8')
       const err = validate(content)
       if (!err) {
-        const fileName = file || 'Pipe from stdin'
+        const fileName = file !== '-' ? file : 'Pipe from stdin'
         return `${fileName} is a valid analytics.txt file as per ${draftName}.`
       }
       throw err

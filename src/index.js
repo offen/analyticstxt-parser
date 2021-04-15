@@ -1,26 +1,27 @@
 const Ajv = require('ajv')
 
-const schema = require('./schema')
+const schema = require('./../schema/draft-offen-analyticstxt-latest')
 
 exports.validate = validate
 function validate (content) {
-  const lines = parse(content.split(/\r?\n/))
+  const lines = content.split(/\r?\n/)
 
-  const errors = lines
-    .filter(l => l.error)
-    .map(l => l.line)
-  if (errors.length) {
-    return new Error(
-      `Could not parse following line(s): ${errors.join(', ')}`
-    )
+  const normalized = {}
+  for (const [i, line] of lines.entries()) {
+    const parsed = parseLine(line)
+    if (parsed.error) {
+      return new Error(`Failed to parse line ${i + 1}: ${parsed.error.message}`)
+    }
+    if (parsed.isCommentOrEmpty) {
+      continue
+    }
+    if (parsed.field in normalized) {
+      return new Error(
+        `Field "${parsed.field}" redefined on line ${i + 1}. Field names can only occur once.`
+      )
+    }
+    normalized[parsed.field] = parsed.values
   }
-
-  const normalized = lines
-    .filter(l => !l.isCommentOrEmpty)
-    .reduce((acc, line) => {
-      acc[line.field] = line.values
-      return acc
-    }, {})
 
   const ajv = new Ajv()
   const validate = ajv.compile(schema)
@@ -32,45 +33,37 @@ function validate (content) {
   return null
 }
 
-function parse (input) {
-  return input
-    .map(line => line.trim())
-    .map((line, index) => {
-      const result = {
-        line: index + 1,
-        error: null,
-        field: null,
-        values: null,
-        isCommentOrEmpty: false
-      }
+function parseLine (line) {
+  const result = {
+    error: null,
+    field: null,
+    values: null,
+    isCommentOrEmpty: false
+  }
 
-      if (line.indexOf('#') === 0 || line === '') {
-        return {
-          ...result,
-          isCommentOrEmpty: true
-        }
-      }
+  if (line.indexOf('#') === 0 || line === '') {
+    return {
+      ...result,
+      isCommentOrEmpty: true
+    }
+  }
 
-      const [field, value] = line.split(':')
-      if (!field || !value) {
-        const error = new Error(
-          `Cannot parse line ${index + 1}, no field name or value found.`
-        )
-        return {
-          ...result,
-          error
-        }
-      }
+  const [field, value] = line.trim().toLowerCase().split(':')
+  if (!field || !value) {
+    const error = new Error('No field name or value found.')
+    return {
+      ...result,
+      error
+    }
+  }
 
-      const values = value
-        .split(',')
-        .filter(Boolean)
-        .map(s => s.trim().toLowerCase())
+  const values = value
+    .split(',')
+    .map(s => s.trim())
 
-      return {
-        ...result,
-        field: field.toLowerCase(),
-        values
-      }
-    })
+  return {
+    ...result,
+    field,
+    values
+  }
 }
