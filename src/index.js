@@ -1,9 +1,16 @@
 const Ajv = require('ajv')
 
-const schema = require('./../schema/draft-offen-analyticstxt-latest')
+const defaultVersion = exports.defaultVersion = 'draft-offen-analyticstxt-latest'
 
 exports.validate = validate
-function validate (content) {
+function validate (content, draftName = defaultVersion) {
+  let schema
+  try {
+    schema = require(`./../schema/${draftName}`)
+  } catch (err) {
+    throw new Error(`Schema for ${draftName} is unknown.`)
+  }
+
   const lines = content.split(/\r?\n/)
 
   const normalized = {}
@@ -63,7 +70,10 @@ function parseLine (line) {
     }
   }
 
-  field = field.toLowerCase().split('').map((c, i) => i ? c : c.toUpperCase()).join('')
+  field = field.toLowerCase()
+    .split('')
+    .map((c, i) => i ? c : c.toUpperCase())
+    .join('')
 
   const values = value
     .split(',')

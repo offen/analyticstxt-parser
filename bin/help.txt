@@ -1,0 +1,21 @@
+Usage: analyticstxt [...options] [subcommand]
+
+Where subcommand is one of the following:
+
+  validate [filename]
+
+    Checks whether the given filename is a valid analytics.txt file.
+    Reads from stdin when `-` is given as the filename.
+
+    Options:
+      -d [draft]      Use a non-default version of the draft.
+                      This is expected to be the full draft name like
+                      `draft-offen-analyticstxt-09`
+
+  drafts
+
+    List the known versions of the draft.
+
+  help
+
+    Prints this message.

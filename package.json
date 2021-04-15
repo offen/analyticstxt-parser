@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/offen/analyticstxt-parser#readme",
   "dependencies": {
-    "ajv": "^8.1.0"
+    "ajv": "^8.1.0",
+    "minimist": "^1.2.5"
   },
   "devDependencies": {
     "standard": "^16.0.3",
