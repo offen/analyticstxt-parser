@@ -67,6 +67,14 @@ tape.test('invalid: parse error', t => {
   t.end()
 })
 
+tape.test('invalid: empty file', t => {
+  const fixture = ''
+
+  const result = validate(fixture)
+  t.notEqual(result, null)
+  t.end()
+})
+
 tape.test('invalid: definition error', t => {
   const fixture = `
 Author: Frederik Ring <hioffen@posteo.de>

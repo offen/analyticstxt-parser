@@ -27,12 +27,20 @@ const subcommand = argv._[0] || 'help'
       const content = fs.readFileSync(
         readFromStdin ? process.stdin.fd : file, 'utf-8'
       )
-      const err = validate(content, draftName)
-      if (!err) {
-        const fileName = readFromStdin ? 'Pipe from stdin' : file
-        return `${fileName} is a valid analytics.txt file as per ${draftName}.`
+
+      const errors = validate(content, draftName)
+      if (Array.isArray(errors) && errors.length) {
+        const [err] = errors
+        if (err instanceof Error) {
+          throw err
+        }
+        throw new Error(
+          `Validation failed with ${err.instancePath} ${err.message}.`
+        )
       }
-      throw err
+
+      const fileName = readFromStdin ? 'Pipe from stdin' : file
+      return `${fileName} is a valid analytics.txt file as per ${draftName}.`
     }
 
     case 'drafts': {

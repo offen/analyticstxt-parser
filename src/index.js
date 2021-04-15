@@ -1,4 +1,5 @@
 const Ajv = require('ajv')
+const addFormats = require('ajv-formats')
 
 const defaultVersion = exports.defaultVersion = 'draft-offen-analyticstxt-latest'
 
@@ -19,24 +20,28 @@ function validate (content, draftName = defaultVersion) {
     try {
       parsed = parseLine(line)
     } catch (e) {
-      return new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
+      const err = new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
+      return wrapParseError(err)
     }
     const { error, isCommentOrEmpty, field, values } = parsed
     if (error) {
-      return new Error(`Failed to parse line ${i + 1}: ${error.message}`)
+      const err = new Error(`Failed to parse line ${i + 1}: ${error.message}`)
+      return wrapParseError(err)
     }
     if (isCommentOrEmpty) {
       continue
     }
     if (field in normalized) {
-      return new Error(
+      const err = new Error(
         `Field "${field}" redefined on line ${i + 1}. Field names can only occur once.`
       )
+      return wrapParseError(err)
     }
     normalized[field] = values
   }
 
   const ajv = new Ajv()
+  addFormats(ajv)
   const validate = ajv.compile(schema)
 
   const valid = validate(normalized)
@@ -84,4 +89,8 @@ function parseLine (line) {
     field,
     values
   }
+}
+
+function wrapParseError (err) {
+  return [err]
 }
