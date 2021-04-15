@@ -12,21 +12,41 @@ function validate (content, draftName = defaultVersion) {
     throw new Error(`Schema for ${draftName} is unknown.`)
   }
 
-  const lines = content.split(/\r?\n/)
+  let parsed
+  try {
+    parsed = parseAnalyticsTxt(content)
+  } catch (err) {
+    return err
+  }
 
+  const ajv = new Ajv()
+  addFormats(ajv)
+  const validate = ajv.compile(schema)
+
+  const valid = validate(parsed)
+  if (!valid) {
+    const [err] = validate.errors
+    return new Error(
+      `Validation failed with ${err.instancePath} ${err.message}.`
+    )
+  }
+  return null
+}
+
+function parseAnalyticsTxt (lines) {
   const normalized = {}
-  for (const [i, line] of lines.entries()) {
+  for (const [i, line] of lines.split(/\r?\n/).entries()) {
     let parsed
     try {
       parsed = parseLine(line)
     } catch (e) {
       const err = new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
-      return wrapParseError(err)
+      throw err
     }
     const { error, isCommentOrEmpty, field, values } = parsed
     if (error) {
       const err = new Error(`Failed to parse line ${i + 1}: ${error.message}`)
-      return wrapParseError(err)
+      throw err
     }
     if (isCommentOrEmpty) {
       continue
@@ -35,20 +55,11 @@ function validate (content, draftName = defaultVersion) {
       const err = new Error(
         `Field "${field}" redefined on line ${i + 1}. Field names can only occur once.`
       )
-      return wrapParseError(err)
+      throw err
     }
     normalized[field] = values
   }
-
-  const ajv = new Ajv()
-  addFormats(ajv)
-  const validate = ajv.compile(schema)
-
-  const valid = validate(normalized)
-  if (!valid) {
-    return validate.errors
-  }
-  return null
+  return normalized
 }
 
 function parseLine (line) {
@@ -66,7 +77,7 @@ function parseLine (line) {
     }
   }
 
-  let [field, value] = line.trim().split(':')
+  const [field, value] = line.trim().split(':')
   if (!field || !value) {
     const error = new Error('No field name or value found.')
     return {
@@ -75,22 +86,20 @@ function parseLine (line) {
     }
   }
 
-  field = field.toLowerCase()
-    .split('')
-    .map((c, i) => i ? c : c.toUpperCase())
-    .join('')
-
-  const values = value
-    .split(',')
-    .map(s => s.trim())
-
   return {
     ...result,
-    field,
-    values
+    field: normalizeFieldName(field),
+    values: splitValue(value)
   }
 }
 
-function wrapParseError (err) {
-  return [err]
+function normalizeFieldName (name) {
+  return name
+    .split('')
+    .map((c, i) => i ? c : c.toUpperCase())
+    .join('')
+}
+
+function splitValue (value) {
+  return value.split(',').map(s => s.trim())
 }

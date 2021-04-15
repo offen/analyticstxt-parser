@@ -24,19 +24,20 @@ const subcommand = argv._[0] || 'help'
           'Passing a file is required when using `validate`'
         )
       }
+
+      if (!readFromStdin && !fs.existsSync(file)) {
+        throw new Error(
+          `File ${file} does not exist.`
+        )
+      }
+
       const content = fs.readFileSync(
         readFromStdin ? process.stdin.fd : file, 'utf-8'
       )
 
-      const errors = validate(content, draftName)
-      if (Array.isArray(errors) && errors.length) {
-        const [err] = errors
-        if (err instanceof Error) {
-          throw err
-        }
-        throw new Error(
-          `Validation failed with ${err.instancePath} ${err.message}.`
-        )
+      const validationError = validate(content, draftName)
+      if (validationError) {
+        throw validationError
       }
 
       const fileName = readFromStdin ? 'Pipe from stdin' : file
@@ -70,6 +71,6 @@ const subcommand = argv._[0] || 'help'
     console.log(result)
   })
   .catch(err => {
-    console.error('Failed running command.')
     console.error(err)
+    process.exit(1)
   })
