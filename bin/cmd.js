@@ -11,12 +11,11 @@ const subcommand = argv._[0] || 'help'
 
 ;(async () => {
   switch (subcommand) {
-    case 'help': {
+    case 'help':
       return fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf-8')
-    }
 
     case 'validate': {
-      const draftName = argv.d || 'draft-offen-analyticstxt-latest'
+      const draftName = argv.d || argv.draft || defaultVersion
       const file = argv._[1]
       const readFromStdin = file === '-'
       if (!file) {
@@ -31,9 +30,8 @@ const subcommand = argv._[0] || 'help'
         )
       }
 
-      const content = fs.readFileSync(
-        readFromStdin ? process.stdin.fd : file, 'utf-8'
-      )
+      const fd = readFromStdin ? process.stdin.fd : file
+      const content = fs.readFileSync(fd, 'utf-8')
 
       const validationError = validate(content, draftName)
       if (validationError) {
@@ -46,10 +44,10 @@ const subcommand = argv._[0] || 'help'
 
     case 'drafts': {
       const result = [
-        `Versions of analytics.txt known to this tool at version ${pkg.version}:`,
+        `Draft versions of analytics.txt known to ${pkg.name}@${pkg.version}:`,
         ''
       ]
-      const files = await fs.promises.readdir(path.resolve(__dirname, '../schema'))
+      const files = fs.readdirSync(path.resolve(__dirname, '../schema'))
       for (const file of files) {
         if (!/\.json$/.test(file)) {
           continue
