@@ -1,5 +1,6 @@
 {
   "title": "analytics.txt",
+  "description": "A schema for validating analytics.txt files as specified in draft-offen-analyticstxt-latest",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "noneType": {
@@ -44,11 +45,12 @@
               "type": "array",
               "items": {
                 "enum": [
+                  "url",
                   "ip-address",
                   "geo-location",
                   "user-agent",
                   "fingerprint",
-                  "device-type", "url",
+                  "device-type",
                   "referrer",
                   "visit-duration",
                   "custom-events",
@@ -178,12 +180,7 @@
             {
               "oneOf": [
                 {
-                  "type": "array",
-                  "items": {
-                    "enum": [
-                      "anonymous"
-                    ]
-                  }
+                  "$ref": "#/definitions/noneType"
                 },
                 {
                   "type": "array",
