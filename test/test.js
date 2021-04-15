@@ -29,6 +29,25 @@ Deploys: offen
   t.end()
 })
 
+tape.test('valid: lowercase fields', t => {
+  const fixture = `
+# analytics.txt file for www.analyticstxt.org
+author: Frederik Ring <hioffen@posteo.de>
+
+collects: url, referrer, device-type
+stores: first-party-cookies, local-storage
+# Usage data is encrypted end-to-end
+Uses: javascript
+# Users can also delete their usage data only without opting out
+allows: opt-in, opt-out
+# Data is retained for 6 months
+retains: P12Y
+`
+  const result = validate(fixture)
+  t.equal(result, null)
+  t.end()
+})
+
 tape.test('valid: empty', t => {
   const fixture = `
 Author: Frederik Ring <hioffen@posteo.de>
@@ -56,6 +75,42 @@ Stores: first-party-cookies, local-storage
 Uses: javascript
 # none is not allowed as a value of many
 Allows: opt-in, opt-out, none
+Retains: P6M
+Honors: none
+Tracks: sessions, users
+Varies: none
+Shares: per-user
+Implements: gdpr
+Deploys: offen
+`
+  const result = validate(fixture)
+  t.notEqual(result, null)
+  t.end()
+})
+
+tape.test('invalid: duplicate field', t => {
+  const fixture = `
+Author: Frederik Ring <hioffen@posteo.de>
+Author: Jane Doe <doe@example.com>
+Collects: url, referrer, device-type
+Stores: first-party-cookies, local-storage
+Uses: javascript
+Allows: opt-in, opt-out
+Retains: P6M
+`
+  const result = validate(fixture)
+  t.notEqual(result, null)
+  t.end()
+})
+
+tape.test('invalid: casing error', t => {
+  const fixture = `
+Author: Frederik Ring <hioffen@posteo.de>
+Collects: url, referrer, device-type
+Stores: first-party-cookies, local-storage
+Uses: javascript
+# defined values are expected to be all-lowercase
+Allows: Opt-in, Opt-out
 Retains: P6M
 Honors: none
 Tracks: sessions, users

@@ -32,10 +32,10 @@
       "type": "object",
       "description": "A declaration with data being collected",
       "properties": {
-        "author": {
+        "Author": {
           "$ref": "#/definitions/singleItem"
         },
-        "collects": {
+        "Collects": {
           "allOf": [
             {
               "$ref": "#/definitions/nonEmptyList"
@@ -58,7 +58,7 @@
             }
           ]
         },
-        "stores": {
+        "Stores": {
           "oneOf": [
             {
               "$ref": "#/definitions/noneType"
@@ -78,7 +78,7 @@
             }
           ]
         },
-        "uses": {
+        "Uses": {
           "allOf": [
             {
               "$ref": "#/definitions/nonEmptyList"
@@ -97,7 +97,7 @@
             }
           ]
         },
-        "allows": {
+        "Allows": {
           "oneOf": [
             {
               "$ref": "#/definitions/noneType"
@@ -120,15 +120,34 @@
             }
           ]
         },
-        "retains": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1,
-          "maxItems": 1
+        "Retains": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/singleItem"
+            },
+            {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$"
+                  }
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "perpetual"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
-        "honors": {
+        "Honors": {
           "oneOf": [
             {
               "$ref": "#/definitions/noneType"
@@ -151,7 +170,7 @@
             }
           ]
         },
-        "tracks": {
+        "Tracks": {
           "allOf": [
             {
               "$ref": "#/definitions/nonEmptyList"
@@ -179,7 +198,7 @@
             }
           ]
         },
-        "varies": {
+        "Varies": {
           "allOf": [
             {
               "$ref": "#/definitions/singleItem"
@@ -196,7 +215,7 @@
             }
           ]
         },
-        "shares": {
+        "Shares": {
           "oneOf": [
             {
               "$ref": "#/definitions/noneType"
@@ -220,20 +239,20 @@
             }
           ]
         },
-        "implements": {
+        "Implements": {
           "$ref": "#/definitions/nonEmptyList"
         },
-        "deploys": {
+        "Deploys": {
           "$ref": "#/definitions/nonEmptyList"
         }
       },
       "required": [
-        "author",
-        "collects",
-        "stores",
-        "uses",
-        "allows",
-        "retains"
+        "Author",
+        "Collects",
+        "Stores",
+        "Uses",
+        "Allows",
+        "Retains"
       ],
       "additionalProperties": false
     },
@@ -241,10 +260,10 @@
       "type": "object",
       "description": "A file declaring that no data is collected",
       "properties": {
-        "author": {
+        "Author": {
           "$ref": "#/definitions/singleItem"
         },
-        "collects": {
+        "Collects": {
           "type": "array",
           "items": {
             "enum": ["none"]
@@ -252,8 +271,8 @@
         }
       },
       "required": [
-        "author",
-        "collects"
+        "Author",
+        "Collects"
       ],
       "additionalProperties": false
     }

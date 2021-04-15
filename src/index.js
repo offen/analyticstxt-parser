@@ -8,19 +8,25 @@ function validate (content) {
 
   const normalized = {}
   for (const [i, line] of lines.entries()) {
-    const parsed = parseLine(line)
-    if (parsed.error) {
-      return new Error(`Failed to parse line ${i + 1}: ${parsed.error.message}`)
+    let parsed
+    try {
+      parsed = parseLine(line)
+    } catch (e) {
+      return new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
     }
-    if (parsed.isCommentOrEmpty) {
+    const { error, isCommentOrEmpty, field, values } = parsed
+    if (error) {
+      return new Error(`Failed to parse line ${i + 1}: ${error.message}`)
+    }
+    if (isCommentOrEmpty) {
       continue
     }
-    if (parsed.field in normalized) {
+    if (field in normalized) {
       return new Error(
-        `Field "${parsed.field}" redefined on line ${i + 1}. Field names can only occur once.`
+        `Field "${field}" redefined on line ${i + 1}. Field names can only occur once.`
       )
     }
-    normalized[parsed.field] = parsed.values
+    normalized[field] = values
   }
 
   const ajv = new Ajv()
@@ -48,7 +54,7 @@ function parseLine (line) {
     }
   }
 
-  const [field, value] = line.trim().toLowerCase().split(':')
+  let [field, value] = line.trim().split(':')
   if (!field || !value) {
     const error = new Error('No field name or value found.')
     return {
@@ -56,6 +62,8 @@ function parseLine (line) {
       error
     }
   }
+
+  field = field.toLowerCase().split('').map((c, i) => i ? c : c.toUpperCase()).join('')
 
   const values = value
     .split(',')
