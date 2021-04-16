@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { validate, defaultVersion } = require('./src')
+const { validate, defaultVersion, parse } = require('./src')
 
 exports.validate = validate
+exports.parse = parse
 exports.defaultVersion = defaultVersion
 exports.schema = require(`./schema/${defaultVersion}`)

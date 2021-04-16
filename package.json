@@ -7,7 +7,7 @@
     "analyticstxt": "bin/cmd.js"
   },
   "scripts": {
-    "test": "tape test/test.js",
+    "test": "tape \"test/test-*.js\"",
     "posttest": "standard",
     "preversion": "npm test",
     "version": "changes --commits",

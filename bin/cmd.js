@@ -10,7 +10,7 @@ const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 
 const pkg = require('../package')
-const { validate, defaultVersion } = require('..')
+const { validate, parse, defaultVersion } = require('..')
 
 const [subcommand = 'help'] = argv._
 
@@ -45,6 +45,33 @@ const [subcommand = 'help'] = argv._
 
       const fileName = readFromStdin ? 'Pipe from stdin' : file
       return `${fileName} is a valid analytics.txt file as per ${draftName}.`
+    }
+
+    case 'parse': {
+      const draftName = argv.d || argv.draft || defaultVersion
+      const lax = argv.l || argv.lax || false
+      const [, file] = argv._
+      const readFromStdin = file === '-'
+      if (!file) {
+        throw new Error(
+          'Passing a file is required when using `parse`'
+        )
+      }
+
+      if (!readFromStdin && !fs.existsSync(file)) {
+        throw new Error(
+          `File ${file} does not exist.`
+        )
+      }
+
+      const fd = readFromStdin ? process.stdin.fd : file
+      const content = fs.readFileSync(fd, 'utf-8')
+
+      const [result, error] = parse(content, { draftName, lax })
+      if (error) {
+        throw error
+      }
+      return JSON.stringify(result, null, 2)
     }
 
     case 'drafts': {

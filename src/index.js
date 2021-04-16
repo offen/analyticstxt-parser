@@ -10,6 +10,28 @@ const defaultVersion = exports.defaultVersion = 'draft-offen-analyticstxt-latest
 
 exports.validate = validate
 function validate (content, draftName = defaultVersion) {
+  let validationError
+  try {
+    ([, validationError] = parseAndValidateWithSchema(content, draftName))
+  } catch (parsingError) {
+    return parsingError
+  }
+  return validationError
+}
+
+exports.parse = parse
+function parse (content, { draftName = defaultVersion, lax = false } = {}) {
+  let validationError
+  let parsed
+  try {
+    ([parsed, validationError] = parseAndValidateWithSchema(content, draftName))
+  } catch (parsingError) {
+    return [null, parsingError]
+  }
+  return [parsed, lax ? null : validationError]
+}
+
+function parseAndValidateWithSchema (content, draftName) {
   let schema
   try {
     schema = require(`./../schema/${draftName}`)
@@ -17,25 +39,22 @@ function validate (content, draftName = defaultVersion) {
     throw new Error(`Schema for ${draftName} is unknown.`)
   }
 
-  let parsed
-  try {
-    parsed = parseAnalyticsTxt(content)
-  } catch (err) {
-    return err
-  }
+  const parsed = parseAnalyticsTxt(content)
 
   const ajv = new Ajv()
   addFormats(ajv)
   const validate = ajv.compile(schema)
 
   const valid = validate(parsed)
+  let validationError = null
   if (!valid) {
     const [err] = validate.errors
-    return new Error(
-      `Validation failed with: ${[err.instancePath, err.message].filter(Boolean).join(' ')}.`
+    const message = [err.instancePath, err.message].filter(Boolean).join(' ')
+    validationError = new Error(
+      `Validation failed with: ${message}.`
     )
   }
-  return null
+  return [parsed, validationError]
 }
 
 function parseAnalyticsTxt (lines) {

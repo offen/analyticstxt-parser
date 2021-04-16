@@ -1,4 +1,4 @@
-Usage: analyticstxt [...flags] [subcommand]
+Usage: analyticstxt [subcommand [...args]] [...flags]
 
 Where subcommand is one of the following:
 
@@ -12,6 +12,21 @@ Where subcommand is one of the following:
                         This is expected to be the full draft name like
                         `draft-offen-analyticstxt-09`
 
+  parse [filename]
+
+    Parses the given analytics.txt file and outputs its JSON
+    representation to stdout. Reads from stdin when `-` is given as the
+    filename.
+
+    Flags:
+      -d, --draft       Use a non-default version of the draft.
+                        This is expected to be the full draft name like
+                        `draft-offen-analyticstxt-09`
+
+      -l, --lax         Do not validate the given file against the schema.
+                        This will still error when the given document cannot
+                        be parsed in the first place
+
   drafts
 
     List the known versions of the draft.
@@ -19,3 +34,17 @@ Where subcommand is one of the following:
   help
 
     Prints this message.
+
+Examples:
+
+  1. Validate the file analytics.txt:
+
+    analyticstxt validate analytics.txt
+
+  2. Validate the file analytics.txt against the 2nd draft version:
+
+    analyticstxt validate analytics.txt -d draft-offen-analyticstxt-02
+
+  3. Parse input from stdout and save to a file
+
+    ./script.sh | analyticstxt parse - > analytics.json
