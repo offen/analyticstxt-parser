@@ -63,6 +63,26 @@ Collects: none
   t.end()
 })
 
+tape.test('valid: email only', t => {
+  const fixture = `
+Author: hioffen@posteo.de
+Collects: none
+`
+  const result = validate(fixture)
+  t.equal(result, null)
+  t.end()
+})
+
+tape.test('invalid: no email', t => {
+  const fixture = `
+Author: Me me and me
+Collects: none
+`
+  const result = validate(fixture)
+  t.notEqual(result, null)
+  t.end()
+})
+
 tape.test('invalid: parse error', t => {
   const fixture = `
 {"json": "is cool"}
