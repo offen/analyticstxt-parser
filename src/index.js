@@ -32,7 +32,7 @@ function validate (content, draftName = defaultVersion) {
   if (!valid) {
     const [err] = validate.errors
     return new Error(
-      `Validation failed with ${err.instancePath} ${err.message}.`
+      `Validation failed with: ${[err.instancePath, err.message].filter(Boolean).join(' ')}.`
     )
   }
   return null
