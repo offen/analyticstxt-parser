@@ -86,17 +86,22 @@
               "$ref": "#/definitions/NoneValue"
             },
             {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "first-party-cookies",
-                  "third-party-cookies",
-                  "local-storage",
-                  "cache"
-                ]
-              },
-              "minItems": 1,
-              "uniqueItems": true
+              "allOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "first-party-cookies",
+                      "third-party-cookies",
+                      "local-storage",
+                      "cache"
+                    ]
+                  }
+                }
+              ]
             }
           ]
         },
@@ -152,16 +157,17 @@
                 {
                   "type": "array",
                   "items": {
-                    "type": "string",
-                    "format": "duration"
-                  }
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "perpetual"
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "format": "duration"
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "perpetual"
+                        ]
+                      }
                     ]
                   }
                 }
