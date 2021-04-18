@@ -10,36 +10,31 @@ const defaultVersion = exports.defaultVersion = 'draft-ring-analyticstxt-latest'
 
 exports.validate = validate
 function validate (content, draftName = defaultVersion) {
-  let validationError
-  try {
-    ([, validationError] = parseAndValidateWithSchema(content, draftName))
-  } catch (parsingError) {
+  const [parsed, parsingError] = parseAnalyticsTxt(content)
+  if (parsingError) {
     return parsingError
   }
+  const validationError = validateWithSchema(parsed, draftName)
   return validationError
 }
 
 exports.parse = parse
 function parse (content, { draftName = defaultVersion, lax = false } = {}) {
-  let validationError
-  let parsed
-  try {
-    ([parsed, validationError] = parseAndValidateWithSchema(content, draftName))
-  } catch (parsingError) {
+  const [parsed, parsingError] = parseAnalyticsTxt(content)
+  if (parsingError) {
     return [null, parsingError]
   }
-  return [parsed, lax ? null : validationError]
+  const validationError = lax ? null : validateWithSchema(parsed, draftName)
+  return [parsed, validationError]
 }
 
-function parseAndValidateWithSchema (content, draftName) {
+function validateWithSchema (parsed, draftName) {
   let schema
   try {
     schema = require(`./../schema/${draftName}`)
   } catch (err) {
     throw new Error(`Schema for ${draftName} is unknown.`)
   }
-
-  const parsed = parseAnalyticsTxt(content)
 
   const ajv = new Ajv()
   addFormats(ajv)
@@ -54,23 +49,23 @@ function parseAndValidateWithSchema (content, draftName) {
       `Validation failed with: ${message}.`
     )
   }
-  return [parsed, validationError]
+  return validationError
 }
 
-function parseAnalyticsTxt (lines) {
+function parseAnalyticsTxt (content) {
   const normalized = {}
-  for (const [i, line] of lines.split(/\r?\n/).entries()) {
+  for (const [i, line] of content.split(/\r?\n/).entries()) {
     let parsed
     try {
       parsed = parseLine(line)
     } catch (e) {
       const err = new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
-      throw err
+      return [null, err]
     }
     const { error, isCommentOrEmpty, field, values } = parsed
     if (error) {
       const err = new Error(`Failed to parse line ${i + 1}: ${error.message}`)
-      throw err
+      return [null, err]
     }
     if (isCommentOrEmpty) {
       continue
@@ -79,11 +74,11 @@ function parseAnalyticsTxt (lines) {
       const err = new Error(
         `Field "${field}" redefined on line ${i + 1}. Field names can only occur once.`
       )
-      throw err
+      return [null, err]
     }
     normalized[field] = values
   }
-  return normalized
+  return [normalized, null]
 }
 
 function parseLine (line) {
