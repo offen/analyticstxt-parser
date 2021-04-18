@@ -10,7 +10,7 @@ Where subcommand is one of the following:
     Flags:
       -d, --draft       Use a non-default version of the draft.
                         This is expected to be the full draft name like
-                        `draft-offen-analyticstxt-09`
+                        `draft-ring-analyticstxt-09`
 
   parse [filename]
 
@@ -21,7 +21,7 @@ Where subcommand is one of the following:
     Flags:
       -d, --draft       Use a non-default version of the draft.
                         This is expected to be the full draft name like
-                        `draft-offen-analyticstxt-09`
+                        `draft-ring-analyticstxt-09`
 
       -l, --lax         Do not validate the given file against the schema.
                         This will still error when the given document cannot
@@ -43,7 +43,7 @@ Examples:
 
   2. Validate the file analytics.txt against the 2nd draft version:
 
-    analyticstxt validate analytics.txt -d draft-offen-analyticstxt-02
+    analyticstxt validate analytics.txt -d draft-ring-analyticstxt-02
 
   3. Parse input from stdout and save to a file
 
