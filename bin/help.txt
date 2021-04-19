@@ -2,7 +2,7 @@ Usage: analyticstxt [subcommand [...args]] [...flags]
 
 Where subcommand is one of the following:
 
-  validate [filename]
+  validate [filename] [...flags]
 
     Checks whether the given file is a valid analytics.txt file.
     Reads from stdin when `-` is given as the filename.
@@ -12,7 +12,7 @@ Where subcommand is one of the following:
                         This is expected to be the full draft name like
                         `draft-ring-analyticstxt-09`
 
-  parse [filename]
+  parse [filename] [...flags]
 
     Parses the given analytics.txt file and outputs its JSON
     representation to stdout. Reads from stdin when `-` is given as the
@@ -26,6 +26,23 @@ Where subcommand is one of the following:
       -l, --lax         Do not validate the given file against the schema.
                         This will still error when the given document cannot
                         be parsed in the first place
+
+  serialize [sourcefile] [outfile] [...flags]
+
+    Reads the JSON representation of an analytics.txt file and serializes the
+    contents into the canonical format. Reads from stdin when `-` is given as
+    the sourcefile. If no outfile is given, the result will be written to stdout.
+
+    Flags:
+      -d, --draft       Use a non-default version of the draft.
+                        This is expected to be the full draft name like
+                        `draft-ring-analyticstxt-09`
+
+      -l, --lax         Do not validate the given file against the schema.
+                        This will still error when the given document cannot
+                        be parsed in the first place
+
+      -f, --force       Overwrite outfile if it already exists.
 
   drafts
 
@@ -48,3 +65,7 @@ Examples:
   3. Parse input from stdout and save to a file
 
     ./script.sh | analyticstxt parse - > analytics.json
+
+  4. Serialize JSON input from stdin into a file named analytics.txt
+
+    ./script.sh | analyticstxt serialize - analytics.txt

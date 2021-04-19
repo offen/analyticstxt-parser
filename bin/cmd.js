@@ -10,7 +10,7 @@ const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 
 const pkg = require('../package')
-const { validate, parse, defaultVersion } = require('..')
+const { validate, parse, serialize, defaultVersion } = require('..')
 
 const [subcommand = 'help'] = argv._
 
@@ -38,13 +38,51 @@ const [subcommand = 'help'] = argv._
       const fd = readFromStdin ? process.stdin.fd : file
       const content = fs.readFileSync(fd, 'utf-8')
 
-      const validationError = validate(content, draftName)
+      const validationError = validate(content, { draftName })
       if (validationError) {
         throw validationError
       }
 
       const fileName = readFromStdin ? 'Pipe from stdin' : file
       return `${fileName} is a valid analytics.txt file as per ${draftName}.`
+    }
+
+    case 'serialize': {
+      const draftName = argv.d || argv.draft || defaultVersion
+      const lax = argv.l || argv.lax || false
+      const force = argv.f || argv.force || false
+
+      const [, file, outfile] = argv._
+      const readFromStdin = file === '-'
+      if (!file) {
+        throw new Error(
+          'Passing a file is required when using `serialize`'
+        )
+      }
+
+      if (!readFromStdin && !fs.existsSync(file)) {
+        throw new Error(
+          `File ${file} does not exist.`
+        )
+      }
+
+      const fd = readFromStdin ? process.stdin.fd : file
+      const content = fs.readFileSync(fd, 'utf-8')
+      const parsed = JSON.parse(content)
+
+      const [result, error] = serialize(parsed, { draftName, lax })
+      if (error) {
+        throw error
+      }
+
+      if (outfile) {
+        if (fs.existsSync(outfile) && !force) {
+          throw new Error(`${outfile} already exists. Pass --force to overwrite it.`)
+        }
+        fs.writeFileSync(outfile, result, 'utf-8')
+        return `Content successfully written to ${outfile}.`
+      }
+      return result
     }
 
     case 'parse': {

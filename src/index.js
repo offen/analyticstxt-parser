@@ -9,7 +9,7 @@ const addFormats = require('ajv-formats')
 const defaultVersion = exports.defaultVersion = 'draft-ring-analyticstxt-latest'
 
 exports.validate = validate
-function validate (content, draftName = defaultVersion) {
+function validate (content, { draftName = defaultVersion } = {}) {
   const [parsed, parsingError] = parseAnalyticsTxt(content)
   if (parsingError) {
     return parsingError
@@ -26,6 +26,15 @@ function parse (content, { draftName = defaultVersion, lax = false } = {}) {
   }
   const validationError = lax ? null : validateWithSchema(parsed, draftName)
   return [parsed, validationError]
+}
+
+exports.serialize = serialize
+function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
+  const validationError = lax ? null : validateWithSchema(source, draftName)
+  if (validationError) {
+    return [null, validationError]
+  }
+  return serializeAnalyticsTxt(source)
 }
 
 function validateWithSchema (parsed, draftName) {
@@ -52,6 +61,20 @@ function validateWithSchema (parsed, draftName) {
   return validationError
 }
 
+function serializeAnalyticsTxt (source) {
+  const result = []
+  for (const key in source) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      const values = source[key]
+      if (!Array.isArray(values) || values.some(s => typeof s !== 'string')) {
+        return [null, new Error('Only string arrays can be used as values')]
+      }
+      result.push(`${normalizeFieldName(key)}: ${values.join(', ')}`)
+    }
+  }
+  return [result.join('\n') + '\n', null]
+}
+
 function parseAnalyticsTxt (content) {
   const normalized = {}
   for (const [i, line] of content.split(/\r?\n/).entries()) {
@@ -59,7 +82,9 @@ function parseAnalyticsTxt (content) {
     try {
       parsed = parseLine(line)
     } catch (e) {
-      const err = new Error(`Unexpected error parsing line ${i + 1}: ${e.message}`)
+      const err = new Error(
+        `Unexpected error parsing line ${i + 1}: ${e.message}`
+      )
       return [null, err]
     }
     const { error, isCommentOrEmpty, field, values } = parsed
