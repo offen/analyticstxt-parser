@@ -6,6 +6,7 @@
   "bin": {
     "analyticstxt": "bin/cmd.js"
   },
+  "private": false,
   "scripts": {
     "test": "tape \"test/test-*.js\"",
     "posttest": "standard",
