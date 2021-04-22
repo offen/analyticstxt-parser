@@ -6,7 +6,15 @@ JSON schema based Node.js library and CLI tool to parse and validate [analytics.
 
 ---
 
-__This package is currently in progress as the draft evolves. Do not use this (yet).__
+## Installation
+
+The package is published to npm:
+
+```
+npm i @offen/analyticstxt-parser -S
+```
+
+and provides a library and an `analyticstxt` CLI tool.
 
 ## Usage
 
@@ -15,7 +23,7 @@ __This package is currently in progress as the draft evolves. Do not use this (y
 For information on how to use the CLI, refer to the `help` subcommand:
 
 ```
-./bin/cmd.js help
+analyticstxt help
 ```
 
 ### Usage as a library
