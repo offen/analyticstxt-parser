@@ -6,13 +6,12 @@
   "bin": {
     "analyticstxt": "bin/cmd.js"
   },
-  "private": false,
   "scripts": {
     "test": "tape \"test/test-*.js\"",
     "posttest": "standard",
     "preversion": "npm test",
     "version": "changes --commits",
-    "postversion": "git push --follow-tags && npm publish"
+    "postversion": "git push --follow-tags && npm publish --access public"
   },
   "repository": {
     "type": "git",
