@@ -6,7 +6,7 @@
 const Ajv = require('ajv')
 const addFormats = require('ajv-formats')
 
-const defaultVersion = exports.defaultVersion = 'draft-ring-analyticstxt-00'
+const defaultVersion = exports.defaultVersion = 'draft-ring-analyticstxt-01'
 
 exports.validate = validate
 function validate (content, { draftName = defaultVersion } = {}) {
