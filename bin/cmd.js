@@ -6,6 +6,7 @@
  */
 
 const fs = require('fs')
+const readline = require('readline')
 const path = require('path')
 const argv = require('minimist')(process.argv.slice(2), {
   alias: {
@@ -41,8 +42,8 @@ const [subcommand = 'help'] = argv._
         )
       }
 
-      const fd = readFromStdin ? process.stdin.fd : file
-      const content = fs.readFileSync(fd, 'utf-8')
+      const fd = readFromStdin ? process.stdin : file
+      const content = await ingest(fd)
 
       const validationError = validate(content, { draftName })
       if (validationError) {
@@ -72,8 +73,8 @@ const [subcommand = 'help'] = argv._
         )
       }
 
-      const fd = readFromStdin ? process.stdin.fd : file
-      const content = fs.readFileSync(fd, 'utf-8')
+      const fd = readFromStdin ? process.stdin : file
+      const content = await ingest(fd)
       const parsed = JSON.parse(content)
 
       const [result, error] = serialize(parsed, { draftName, lax })
@@ -108,8 +109,8 @@ const [subcommand = 'help'] = argv._
         )
       }
 
-      const fd = readFromStdin ? process.stdin.fd : file
-      const content = fs.readFileSync(fd, 'utf-8')
+      const fd = readFromStdin ? process.stdin : file
+      const content = await ingest(fd)
 
       const [result, error] = parse(content, { draftName, lax })
       if (error) {
@@ -150,3 +151,20 @@ const [subcommand = 'help'] = argv._
     console.error(err)
     process.exit(1)
   })
+
+async function ingest (input) {
+  const fileStream = typeof input === 'string'
+    ? fs.createReadStream(input)
+    : input
+
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity
+  })
+
+  const buf = []
+  for await (const line of rl) {
+    buf.push(line)
+  }
+  return buf.join('\n')
+}
