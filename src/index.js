@@ -62,21 +62,38 @@ function validateWithSchema (parsed, draftName) {
 }
 
 function serializeAnalyticsTxt (source) {
-  const result = []
+  let ordered = []
   for (const key in source) {
-    if (Object.prototype.hasOwnProperty.call(source, key)) {
-      const values = source[key]
-      if (!Array.isArray(values) || values.some(s => typeof s !== 'string')) {
-        return [null, new Error('Only string arrays can be used as values')]
-      }
-      result.push(`${normalizeFieldName(key)}: ${values.join(', ')}`)
+    if (!Object.prototype.hasOwnProperty.call(source, key) || key === '_ordering') {
+      continue
     }
+    ordered.push([key, source[key]])
+  }
+  ordered = ordered.sort(function (a, b) {
+    return source._ordering.indexOf(a.key) <= source._ordering.indexOf(b.key)
+      ? 1
+      : -1
+  })
+
+  const result = []
+  for (const [key, { values, comments }] of ordered) {
+    if (!Array.isArray(values) || values.some(s => typeof s !== 'string')) {
+      return [null, new Error('Only string arrays can be used as values')]
+    }
+    for (const comment of comments) {
+      result.push(`# ${comment}`)
+    }
+    result.push(`${normalizeFieldName(key)}: ${values.join(', ')}`)
   }
   return [result.join('\n') + '\n', null]
 }
 
 function parseAnalyticsTxt (content) {
-  const normalized = {}
+  const normalized = {
+    _ordering: []
+  }
+
+  let currentComments = []
   for (const [i, line] of content.split(/\r?\n/).entries()) {
     let parsed
     try {
@@ -87,41 +104,58 @@ function parseAnalyticsTxt (content) {
       )
       return [null, err]
     }
-    const { error, isCommentOrEmpty, field, values } = parsed
+    const { error, isEmpty, comment, field, values } = parsed
     if (error) {
       const err = new Error(`Failed to parse line ${i + 1}: ${error.message}`)
       return [null, err]
     }
-    if (isCommentOrEmpty) {
+    if (isEmpty) {
       continue
     }
+    if (comment) {
+      currentComments.push(comment)
+      continue
+    }
+
     if (field in normalized) {
       const err = new Error(
         `Field "${field}" redefined on line ${i + 1}. Field names can only occur once.`
       )
       return [null, err]
     }
-    normalized[field] = values
+    normalized._ordering.push(field)
+    normalized[field] = { values, comments: currentComments }
+    currentComments = []
   }
   return [normalized, null]
 }
 
 function parseLine (line) {
+  line = line.trim()
+
   const result = {
     error: null,
     field: null,
     values: null,
-    isCommentOrEmpty: false
+    comment: null,
+    isEmpty: false
   }
 
-  if (line.indexOf('#') === 0 || line === '') {
+  if (!line) {
     return {
       ...result,
-      isCommentOrEmpty: true
+      isEmpty: true
     }
   }
 
-  const [field, value] = line.trim().split(':')
+  if (/^#/.test(line)) {
+    return {
+      ...result,
+      comment: line.replace(/^#\s+/, '')
+    }
+  }
+
+  const [field, value] = line.split(':')
   if (!field || !value) {
     const error = new Error('No field name or value found.')
     return {
