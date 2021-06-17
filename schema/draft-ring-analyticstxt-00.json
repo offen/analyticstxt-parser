@@ -72,6 +72,7 @@
         },
         "Author": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -84,6 +85,7 @@
         },
         "Collects": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -117,6 +119,7 @@
         },
         "Stores": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -151,6 +154,7 @@
         },
         "Uses": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -179,6 +183,7 @@
         },
         "Allows": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -211,6 +216,7 @@
         },
         "Retains": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -248,6 +254,7 @@
         },
         "Honors": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -280,6 +287,7 @@
         },
         "Tracks": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -312,6 +320,7 @@
         },
         "Varies": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -338,6 +347,7 @@
         },
         "Shares": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -371,6 +381,7 @@
         },
         "Implements": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -413,6 +424,7 @@
         },
         "Author": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {
@@ -425,6 +437,7 @@
         },
         "Collects": {
           "additionalProperties": false,
+          "required": ["values"],
           "type": "object",
           "properties": {
             "comments": {

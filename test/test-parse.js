@@ -41,11 +41,9 @@ Deploys: offen
       values: ['Frederik Ring <hioffen@posteo.de>']
     },
     Collects: {
-      comments: [],
       values: ['url', 'referrer', 'device-type']
     },
     Stores: {
-      comments: [],
       values: ['first-party-cookies', 'local-storage']
     },
     Uses: {
@@ -65,23 +63,18 @@ Deploys: offen
       values: ['none']
     },
     Tracks: {
-      comments: [],
       values: ['sessions', 'users']
     },
     Varies: {
-      comments: [],
       values: ['none']
     },
     Shares: {
-      comments: [],
       values: ['per-user']
     },
     Implements: {
-      comments: [],
       values: ['gdpr']
     },
     Deploys: {
-      comments: [],
       values: ['offen']
     }
   })
@@ -121,11 +114,9 @@ Collects: ducklings
   t.deepEqual(result, {
     _ordering: ['Author', 'Collects'],
     Author: {
-      comments: [],
       values: ['Frederik Ring <hioffen@posteo.de>']
     },
     Collects: {
-      comments: [],
       values: ['ducklings']
     }
   })

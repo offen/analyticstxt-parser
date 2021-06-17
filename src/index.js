@@ -62,26 +62,16 @@ function validateWithSchema (parsed, draftName) {
 }
 
 function serializeAnalyticsTxt (source) {
-  let ordered = []
-  for (const key in source) {
-    if (!Object.prototype.hasOwnProperty.call(source, key) || key === '_ordering') {
-      continue
-    }
-    ordered.push([key, source[key]])
-  }
-  ordered = ordered.sort(function (a, b) {
-    return source._ordering.indexOf(a.key) <= source._ordering.indexOf(b.key)
-      ? 1
-      : -1
-  })
-
   const result = []
-  for (const [key, { values, comments }] of ordered) {
+  for (const key of source._ordering) {
+    const { values, comments } = source[key]
     if (!Array.isArray(values) || values.some(s => typeof s !== 'string')) {
       return [null, new Error('Only string arrays can be used as values')]
     }
-    for (const comment of comments) {
-      result.push(`# ${comment}`)
+    if (Array.isArray(comments)) {
+      for (const comment of comments) {
+        result.push(`# ${comment}`)
+      }
     }
     result.push(`${normalizeFieldName(key)}: ${values.join(', ')}`)
   }
@@ -124,7 +114,10 @@ function parseAnalyticsTxt (content) {
       return [null, err]
     }
     normalized._ordering.push(field)
-    normalized[field] = { values, comments: currentComments }
+    normalized[field] = { values }
+    if (currentComments.length) {
+      normalized[field].comments = currentComments
+    }
     currentComments = []
   }
   return [normalized, null]

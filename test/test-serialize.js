@@ -36,15 +36,13 @@ tape.test('valid: full definition', t => {
         'url',
         'referrer',
         'device-type'
-      ],
-      comments: []
+      ]
     },
     Stores: {
       values: [
         'first-party-cookies',
         'local-storage'
-      ],
-      comments: []
+      ]
     },
     Uses: {
       values: [
@@ -83,32 +81,27 @@ tape.test('valid: full definition', t => {
       values: [
         'sessions',
         'users'
-      ],
-      comments: []
+      ]
     },
     Varies: {
       values: [
         'none'
-      ],
-      comments: []
+      ]
     },
     Shares: {
       values: [
         'per-user'
-      ],
-      comments: []
+      ]
     },
     Implements: {
       values: [
         'gdpr'
-      ],
-      comments: []
+      ]
     },
     Deploys: {
       values: [
         'offen'
-      ],
-      comments: []
+      ]
     }
   }
   const [result, error] = serialize(fixture)
