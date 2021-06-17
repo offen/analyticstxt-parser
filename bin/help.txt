@@ -48,6 +48,10 @@ Where subcommand is one of the following:
 
     List the known versions of the draft.
 
+  version
+
+    Prints the command's version.
+
   help
 
     Prints this message.

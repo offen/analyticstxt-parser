@@ -137,6 +137,8 @@ const [subcommand = 'help'] = argv._
 
       return result.join('\n')
     }
+    case 'version':
+      return pkg.version
     default:
       throw new Error(`${subcommand} is not a valid subcommand.`)
   }
