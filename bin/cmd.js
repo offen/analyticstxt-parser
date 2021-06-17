@@ -8,16 +8,22 @@
 const fs = require('fs')
 const readline = require('readline')
 const path = require('path')
+
+const pkg = require('../package')
+const { validate, parse, serialize, defaultVersion } = require('..')
+
 const argv = require('minimist')(process.argv.slice(2), {
   alias: {
     draft: 'd',
     lax: 'l',
     force: 'f'
+  },
+  default: {
+    lax: false,
+    force: false,
+    draft: defaultVersion
   }
 })
-
-const pkg = require('../package')
-const { validate, parse, serialize, defaultVersion } = require('..')
 
 const [subcommand = 'help'] = argv._
 
@@ -27,7 +33,7 @@ const [subcommand = 'help'] = argv._
       return fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf-8')
 
     case 'validate': {
-      const draftName = argv.draft || defaultVersion
+      const draftName = argv.draft
       const [, file] = argv._
       const readFromStdin = file === '-'
       if (!file) {
@@ -56,8 +62,8 @@ const [subcommand = 'help'] = argv._
 
     case 'serialize': {
       const draftName = argv.draft || defaultVersion
-      const lax = argv.lax || false
-      const force = argv.force || false
+      const lax = argv.lax
+      const force = argv.force
 
       const [, file, outfile] = argv._
       const readFromStdin = file === '-'
@@ -93,8 +99,8 @@ const [subcommand = 'help'] = argv._
     }
 
     case 'parse': {
-      const draftName = argv.draft || defaultVersion
-      const lax = argv.lax || false
+      const draftName = argv.draft
+      const lax = argv.lax
       const [, file] = argv._
       const readFromStdin = file === '-'
       if (!file) {
