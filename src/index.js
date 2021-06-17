@@ -117,7 +117,7 @@ function validateWithSchema (parsed, draftName) {
  */
 function serializeAnalyticsTxt (source) {
   const result = []
-  for (const key of source._ordering) {
+  for (const key of source._ordering || Object.keys(source)) {
     const { values, comments } = source[key]
     if (!Array.isArray(values) || values.some(s => typeof s !== 'string')) {
       return [null, new Error('Only string arrays can be used as values')]
