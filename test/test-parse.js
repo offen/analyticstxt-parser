@@ -32,18 +32,51 @@ Deploys: offen
   const [result, error] = parse(fixture)
   t.equal(error, null)
   t.deepEqual(result, {
-    Author: ['Frederik Ring <hioffen@posteo.de>'],
-    Collects: ['url', 'referrer', 'device-type'],
-    Stores: ['first-party-cookies', 'local-storage'],
-    Uses: ['javascript'],
-    Allows: ['opt-in', 'opt-out'],
-    Retains: ['P6M'],
-    Honors: ['none'],
-    Tracks: ['sessions', 'users'],
-    Varies: ['none'],
-    Shares: ['per-user'],
-    Implements: ['gdpr'],
-    Deploys: ['offen']
+    _ordering: [
+      'Author', 'Collects', 'Stores', 'Uses', 'Allows', 'Retains', 'Honors',
+      'Tracks', 'Varies', 'Shares', 'Implements', 'Deploys'
+    ],
+    Author: {
+      comments: ['analytics.txt file for www.analyticstxt.org'],
+      values: ['Frederik Ring <hioffen@posteo.de>']
+    },
+    Collects: {
+      values: ['url', 'referrer', 'device-type']
+    },
+    Stores: {
+      values: ['first-party-cookies', 'local-storage']
+    },
+    Uses: {
+      comments: ['Usage data is encrypted end-to-end'],
+      values: ['javascript']
+    },
+    Allows: {
+      comments: ['Users can also delete their usage data only without opting out'],
+      values: ['opt-in', 'opt-out']
+    },
+    Retains: {
+      comments: ['Data is retained for 6 months'],
+      values: ['P6M']
+    },
+    Honors: {
+      comments: ['Optional fields'],
+      values: ['none']
+    },
+    Tracks: {
+      values: ['sessions', 'users']
+    },
+    Varies: {
+      values: ['none']
+    },
+    Shares: {
+      values: ['per-user']
+    },
+    Implements: {
+      values: ['gdpr']
+    },
+    Deploys: {
+      values: ['offen']
+    }
   })
   t.end()
 })
@@ -79,8 +112,13 @@ Collects: ducklings
   const [result, error] = parse(fixture, { lax: true })
   t.equal(error, null)
   t.deepEqual(result, {
-    Author: ['Frederik Ring <hioffen@posteo.de>'],
-    Collects: ['ducklings']
+    _ordering: ['Author', 'Collects'],
+    Author: {
+      values: ['Frederik Ring <hioffen@posteo.de>']
+    },
+    Collects: {
+      values: ['ducklings']
+    }
   })
   t.end()
 })
