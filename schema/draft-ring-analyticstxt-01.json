@@ -1,0 +1,461 @@
+{
+  "title": "analytics.txt",
+  "description": "A schema for validating analytics.txt files as specified in draft-ring-analyticstxt-01",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "FieldComments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Author": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "email"
+          },
+          {
+            "type": "string",
+            "pattern": "^.+\\s<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?>$"
+          }
+        ]
+      }
+    },
+    "NoneValue": {
+      "description": "A single value 'none' is given",
+      "type": "array",
+      "items": {
+        "enum": [
+          "none"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "SingleValue": {
+      "description": "A single arbitrary string value is given",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "UniqueValues": {
+      "description": "A non-empty list of unique strings",
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "Ordering": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "description": "A declaration where data is being collected",
+      "properties": {
+        "_ordering": {
+          "$ref": "#/definitions/Ordering"
+        },
+        "Author": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "$ref": "#/definitions/Author"
+            }
+          }
+        },
+        "Collects": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "url",
+                      "ip-address",
+                      "geo-location",
+                      "user-agent",
+                      "fingerprint",
+                      "device-type",
+                      "referrer",
+                      "visit-duration",
+                      "custom-events",
+                      "session-recording"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "Stores": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/NoneValue"
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/UniqueValues"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "first-party-cookies",
+                          "third-party-cookies",
+                          "local-storage",
+                          "cache"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Uses": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "javascript",
+                      "pixel",
+                      "server-side",
+                      "logs",
+                      "other"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "Allows": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/NoneValue"
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/UniqueValues"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "opt-in",
+                          "opt-out"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Retains": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/SingleValue"
+                },
+                {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "format": "duration"
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "perpetual"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Honors": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/NoneValue"
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/UniqueValues"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "do-not-track",
+                          "global-privacy-control"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Tracks": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                },
+                {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/NoneValue"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "sessions",
+                          "users"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Varies": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/SingleValue"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "none",
+                      "random",
+                      "behavioral",
+                      "geographic"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "Shares": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/NoneValue"
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/definitions/UniqueValues"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "per-user",
+                          "general-public",
+                          "third-party"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "Implements": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "$ref": "#/definitions/UniqueValues"
+            }
+          }
+        },
+        "Deploys": {
+          "additionalProperties": false,
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "$ref": "#/definitions/UniqueValues"
+            }
+          }
+        }
+      },
+      "required": [
+        "Author",
+        "Collects",
+        "Stores",
+        "Uses",
+        "Allows",
+        "Retains"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "description": "A file declaring that no data is collected",
+      "properties": {
+        "_ordering": {
+          "$ref": "#/definitions/Ordering"
+        },
+        "Author": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "$ref": "#/definitions/Author"
+            }
+          }
+        },
+        "Collects": {
+          "additionalProperties": false,
+          "required": ["values"],
+          "type": "object",
+          "properties": {
+            "comments": {
+              "$ref": "#/definitions/FieldComments"
+            },
+            "values": {
+              "$ref": "#/definitions/NoneValue"
+            }
+          }
+        }
+      },
+      "required": [
+        "Author",
+        "Collects"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
