@@ -33,7 +33,6 @@ const [subcommand = 'help'] = argv._
       return fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf-8')
 
     case 'validate': {
-      const draftName = argv.draft
       const [, file] = argv._
       const readFromStdin = file === '-'
       if (!file) {
@@ -51,17 +50,16 @@ const [subcommand = 'help'] = argv._
       const fd = readFromStdin ? process.stdin : file
       const content = await ingest(fd)
 
-      const validationError = validate(content, { draftName })
+      const validationError = validate(content, { draftName: argv.draft })
       if (validationError) {
         throw validationError
       }
 
       const fileName = readFromStdin ? 'Pipe from stdin' : file
-      return `${fileName} is a valid analytics.txt file as per ${draftName}.`
+      return `${fileName} is a valid analytics.txt file as per ${argv.draft}.`
     }
 
     case 'serialize': {
-      const draftName = argv.draft || defaultVersion
       const lax = argv.lax
       const force = argv.force
 
@@ -83,7 +81,7 @@ const [subcommand = 'help'] = argv._
       const content = await ingest(fd)
       const parsed = JSON.parse(content)
 
-      const [result, error] = serialize(parsed, { draftName, lax })
+      const [result, error] = serialize(parsed, { draftName: argv.draft, lax })
       if (error) {
         throw error
       }
@@ -99,7 +97,6 @@ const [subcommand = 'help'] = argv._
     }
 
     case 'parse': {
-      const draftName = argv.draft
       const lax = argv.lax
       const [, file] = argv._
       const readFromStdin = file === '-'
@@ -118,7 +115,7 @@ const [subcommand = 'help'] = argv._
       const fd = readFromStdin ? process.stdin : file
       const content = await ingest(fd)
 
-      const [result, error] = parse(content, { draftName, lax })
+      const [result, error] = parse(content, { draftName: argv.draft, lax })
       if (error) {
         throw error
       }
@@ -144,8 +141,10 @@ const [subcommand = 'help'] = argv._
 
       return result.join('\n')
     }
+
     case 'version':
       return pkg.version
+
     default:
       throw new Error(`${subcommand} is not a valid subcommand.`)
   }
