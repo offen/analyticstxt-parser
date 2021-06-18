@@ -11,6 +11,9 @@
     "posttest": "standard",
     "preversion": "npm test",
     "version": "changes --commits",
+    "prebuild": "rm -rf dist && mkdir -p dist/src",
+    "build": "babel ./src --out-dir dist/src && babel index.js --out-file dist/index.js && cp -r schema dist/schema",
+    "prepublishOnly": "npm run build",
     "postversion": "git push --follow-tags && npm publish --access public"
   },
   "repository": {
@@ -28,7 +31,11 @@
     "ajv-formats": "^2.0.2",
     "minimist": "^1.2.5"
   },
+  "browser": "./dist/index.js",
   "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.5",
     "@studio/changes": "^2.1.0",
     "standard": "^16.0.3",
     "tape": "^5.2.2"
