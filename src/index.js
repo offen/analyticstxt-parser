@@ -7,7 +7,9 @@
 const Ajv = require('ajv')
 const addFormats = require('ajv-formats')
 
-const defaultVersion = exports.defaultVersion = 'draft-ring-analyticstxt-01'
+const schemas = require('./../schema')
+
+const { defaultVersion } = schemas
 
 /**
  * A field in an analytics.txt file.
@@ -87,10 +89,8 @@ function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
 * @param {string} draftName
  */
 function validateWithSchema (parsed, draftName) {
-  let schema
-  try {
-    schema = require(`./../schema/${draftName}`)
-  } catch (err) {
+  const schema = schemas[draftName]
+  if (!schema) {
     throw new Error(`Schema for ${draftName} is unknown.`)
   }
 

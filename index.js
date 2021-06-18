@@ -3,10 +3,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { validate, defaultVersion, parse, serialize } = require('./src')
+const { validate, parse, serialize } = require('./src')
+const schemas = require('./schema')
 
-exports.validate = validate
-exports.parse = parse
-exports.serialize = serialize
-exports.defaultVersion = defaultVersion
-exports.schema = require(`./schema/${defaultVersion}`)
+module.exports = {
+  validate: validate,
+  parse: parse,
+  serialize: serialize,
+  defaultVersion: schemas.defaultVersion,
+  schema: schemas[schemas.defaultVersion]
+}
