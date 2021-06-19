@@ -147,9 +147,9 @@ const [subcommand = 'help'] = argv._
       const url = `https://www.ietf.org/archive/id/${argv.draft}.txt`
       const content = await new Promise(function (resolve, reject) {
         https.get(url, function (res) {
-          const { statusCode } = res
-          if (statusCode !== 200) {
-            reject(new Error(`Server responded with status ${statusCode}`))
+          if (res.statusCode !== 200) {
+            reject(new Error(`Server responded with status ${res.statusCode}`))
+            return
           }
           let buf = ''
           res.on('data', chunk => { buf += chunk })
