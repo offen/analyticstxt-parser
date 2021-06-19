@@ -48,6 +48,15 @@ Where subcommand is one of the following:
 
     List the known versions of the draft.
 
+  draft
+
+    Download the draft document from the IETF and print it to stdout.
+
+    Flags:
+      -d, --draft       Use a non-default version of the draft.
+                        This is expected to be the full draft name like
+                        `draft-ring-analyticstxt-09`
+
   version
 
     Prints the command's version.
@@ -73,3 +82,8 @@ Examples:
   4. Serialize JSON input from stdin into a file named analytics.txt
 
     ./script.sh | analyticstxt serialize - analytics.txt
+
+  5. Download the latest version of the draft and pipe into less
+     for reading
+
+    analyticstxt draft | less

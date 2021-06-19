@@ -8,6 +8,7 @@
 const fs = require('fs')
 const readline = require('readline')
 const path = require('path')
+const https = require('https')
 
 const pkg = require('../package')
 const { validate, parse, serialize, defaultVersion } = require('..')
@@ -140,6 +141,22 @@ const [subcommand = 'help'] = argv._
       }
 
       return result.join('\n')
+    }
+
+    case 'draft': {
+      const url = `https://www.ietf.org/archive/id/${argv.draft}.txt`
+      const content = await new Promise(function (resolve, reject) {
+        https.get(url, function (res) {
+          const { statusCode } = res
+          if (statusCode !== 200) {
+            reject(new Error(`Server responded with status ${statusCode}`))
+          }
+          let buf = ''
+          res.on('data', chunk => { buf += chunk })
+          res.on('end', () => resolve(buf))
+        })
+      })
+      return content
     }
 
     case 'version':
