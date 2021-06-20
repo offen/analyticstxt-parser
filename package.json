@@ -1,6 +1,6 @@
 {
   "name": "@offen/analyticstxt-parser",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Parse and validate analytics.txt files",
   "bin": {
     "analyticstxt": "bin/cmd.js"

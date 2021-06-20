@@ -1,5 +1,14 @@
 # Changes
 
+## 2.1.0
+
+- [`c1902d6`](https://github.com/offen/analyticstxt-parser/commit/c1902d651342df25402381421be434190853d37f)
+  validate draft name before calling through to ietf (Frederik Ring)
+- [`048d347`](https://github.com/offen/analyticstxt-parser/commit/048d3473766f79d780a9c93d29ecbd1c4fa696c4)
+  return early on download failure (Frederik Ring)
+- [`011542f`](https://github.com/offen/analyticstxt-parser/commit/011542f3792eb2b25761f1ef4f859f9b7c7a92e5)
+  add cli command for downloading draft doc from IETF (Frederik Ring)
+
 ## 2.0.0
 
 - [`230cf5f`](https://github.com/offen/analyticstxt-parser/commit/230cf5ff295f09fbc3acdd5c433b9fad8e5cd67c)
