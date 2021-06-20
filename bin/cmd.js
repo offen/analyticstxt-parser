@@ -144,6 +144,13 @@ const [subcommand = 'help'] = argv._
     }
 
     case 'draft': {
+      if (!/draft-ring-analyticstxt-0[01]/.test(argv.draft)) {
+        throw new Error(
+          'Received malformed or unknown draft name, cannot continue. ' +
+          'Check `drafts` for a list of available documents.'
+        )
+      }
+
       const url = `https://www.ietf.org/archive/id/${argv.draft}.txt`
       const content = await new Promise(function (resolve, reject) {
         https.get(url, function (res) {
