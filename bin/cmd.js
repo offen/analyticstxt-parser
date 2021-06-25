@@ -11,7 +11,7 @@ const path = require('path')
 const https = require('https')
 
 const pkg = require('../package')
-const { validate, parse, serialize, defaultVersion } = require('..')
+const { mustValidate, mustParse, mustSerialize, defaultVersion } = require('..')
 
 const argv = require('minimist')(process.argv.slice(2), {
   alias: {
@@ -38,7 +38,8 @@ const [subcommand = 'help'] = argv._
       const readFromStdin = file === '-'
       if (!file) {
         throw new Error(
-          'Passing a file is required when using `validate`'
+          'Passing a file is required when using `validate`. ' +
+          'Use `-` to read from stdin'
         )
       }
 
@@ -51,10 +52,7 @@ const [subcommand = 'help'] = argv._
       const fd = readFromStdin ? process.stdin : file
       const content = await ingest(fd)
 
-      const validationError = validate(content, { draftName: argv.draft })
-      if (validationError) {
-        throw validationError
-      }
+      mustValidate(content, { draftName: argv.draft })
 
       const fileName = readFromStdin ? 'Pipe from stdin' : file
       return `${fileName} is a valid analytics.txt file as per ${argv.draft}.`
@@ -68,7 +66,8 @@ const [subcommand = 'help'] = argv._
       const readFromStdin = file === '-'
       if (!file) {
         throw new Error(
-          'Passing a file is required when using `serialize`'
+          'Passing a file is required when using `serialize`. ' +
+          'Use `-` to read from stdin.'
         )
       }
 
@@ -82,14 +81,12 @@ const [subcommand = 'help'] = argv._
       const content = await ingest(fd)
       const parsed = JSON.parse(content)
 
-      const [result, error] = serialize(parsed, { draftName: argv.draft, lax })
-      if (error) {
-        throw error
-      }
-
+      const result = mustSerialize(parsed, { draftName: argv.draft, lax })
       if (outfile) {
         if (fs.existsSync(outfile) && !force) {
-          throw new Error(`${outfile} already exists. Pass --force to overwrite it.`)
+          throw new Error(
+            `${outfile} already exists. Pass --force to overwrite it.`
+          )
         }
         fs.writeFileSync(outfile, result, 'utf-8')
         return `Content successfully written to ${outfile}.`
@@ -103,7 +100,8 @@ const [subcommand = 'help'] = argv._
       const readFromStdin = file === '-'
       if (!file) {
         throw new Error(
-          'Passing a file is required when using `parse`'
+          'Passing a file is required when using `parse`. ' +
+          'Use `-` to read from stdin.'
         )
       }
 
@@ -116,10 +114,7 @@ const [subcommand = 'help'] = argv._
       const fd = readFromStdin ? process.stdin : file
       const content = await ingest(fd)
 
-      const [result, error] = parse(content, { draftName: argv.draft, lax })
-      if (error) {
-        throw error
-      }
+      const result = mustParse(content, { draftName: argv.draft, lax })
       return JSON.stringify(result, null, 2)
     }
 
