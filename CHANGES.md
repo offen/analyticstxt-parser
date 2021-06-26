@@ -1,5 +1,12 @@
 # Changes
 
+## 2.2.0
+
+- [`ea749f7`](https://github.com/offen/analyticstxt-parser/commit/ea749f76b5b4fa55eed414434e19a831df63f592)
+  implement throwing versions of public methods (Frederik Ring)
+- [`28ef253`](https://github.com/offen/analyticstxt-parser/commit/28ef253b4ed91abc92685ae0a64a2c5625bce33b)
+  add custom error messages to schema failures (Frederik Ring)
+
 ## 2.1.0
 
 - [`c1902d6`](https://github.com/offen/analyticstxt-parser/commit/c1902d651342df25402381421be434190853d37f)
