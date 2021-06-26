@@ -6,6 +6,7 @@
 
 const Ajv = require('ajv')
 const addFormats = require('ajv-formats')
+const addErrors = require('ajv-errors')
 
 const schemas = require('./../schema')
 
@@ -94,20 +95,29 @@ function validateWithSchema (parsed, draftName) {
     throw new Error(`Schema for ${draftName} is unknown.`)
   }
 
-  const ajv = new Ajv()
+  const ajv = new Ajv({ allErrors: true })
   addFormats(ajv)
+  addErrors(ajv)
   const validate = ajv.compile(schema)
 
   const valid = validate(parsed)
-  let validationError = null
-  if (!valid) {
-    const [err] = validate.errors
-    const message = [err.instancePath, err.message].filter(Boolean).join(' ')
-    validationError = new Error(
-      `Validation failed with: ${message}.`
-    )
+  if (valid) {
+    return null
   }
-  return validationError
+
+  const bySchemaPath = validate.errors
+    .filter(function (err) {
+      return err.keyword === 'errorMessage'
+    })
+    .sort(function (e1, e2) {
+      return e1.schemaPath.localeCompare(e2.schemaPath)
+    })
+    .map(function (err) {
+      return err.message
+    })
+    .join(' ')
+
+  return new Error(bySchemaPath)
 }
 
 /**

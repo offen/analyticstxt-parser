@@ -28,7 +28,7 @@ analyticstxt help
 
 ### Usage as a library
 
-The following functions are exported by this module:
+The following functions are exported by this module.
 
 #### `validate(content, { draftName? })`
 
@@ -45,6 +45,8 @@ if (error) {
   // given file is not valid
 }
 ```
+
+This function is also available as the throwing version `mustValidate`.
 
 #### `parse(content, { lax = false, draftName? })`
 
@@ -63,6 +65,8 @@ if (error) {
 // process result
 ```
 
+This function is also available as the throwing version `mustParse`.
+
 #### `serialize(source, { lax = false, draftName? })`
 
 Serialize the given JavaScript Object representation into an analytics.txt file. Returns an Array `[result, error]` where either can be `null`. If `lax: true` is given, the source will not be validated against the latest schema (or the given `draftName`).
@@ -79,6 +83,8 @@ if (error) {
 }
 fs.writeFileSync('./analytics.txt', result, 'utf-8')
 ```
+
+This function is also available as the throwing version `mustSerialize`.
 
 ---
 

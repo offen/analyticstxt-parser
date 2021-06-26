@@ -1,72 +1,16 @@
 {
   "title": "analytics.txt",
   "description": "A schema for validating analytics.txt files as specified in draft-ring-analyticstxt-01",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "FieldComments": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "Author": {
-      "type": "array",
-      "minItems": 1,
-      "maxItems": 1,
-      "items": {
-        "oneOf": [
-          {
-            "type": "string",
-            "format": "email"
-          },
-          {
-            "type": "string",
-            "pattern": "^.+\\s<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?>$"
-          }
-        ]
-      }
-    },
-    "NoneValue": {
-      "description": "A single value 'none' is given",
-      "type": "array",
-      "items": {
-        "enum": [
-          "none"
-        ]
-      },
-      "minItems": 1,
-      "maxItems": 1
-    },
-    "SingleValue": {
-      "description": "A single arbitrary string value is given",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "minItems": 1,
-      "maxItems": 1
-    },
-    "UniqueValues": {
-      "description": "A non-empty list of unique strings",
-      "type": "array",
-      "uniqueItems": true,
-      "minItems": 1,
-      "items": {
-        "type": "string"
-      }
-    },
-    "Ordering": {
-      "uniqueItems": true,
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
+  "errorMessage": {
+    "oneOf": "The given data did neither match a full or a minimal definition."
   },
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "oneOf": [
     {
-      "type": "object",
+      "title": "Full Definition",
+      "errorMessage": "A full definition must contain all fields required by the specification and can also contain optional fields.",
       "description": "A declaration where data is being collected",
+      "type": "object",
       "properties": {
         "_ordering": {
           "$ref": "#/definitions/Ordering"
@@ -80,7 +24,21 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
-              "$ref": "#/definitions/Author"
+              "errorMessage": "In a full definition, the Author field must be a proper name-addr.",
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  {
+                    "$ref": "#/definitions/name-addr"
+                  }
+                ]
+              }
             }
           }
         },
@@ -93,6 +51,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "In a full definition, Collects is expected to be a list containing allowed items only.",
               "allOf": [
                 {
                   "$ref": "#/definitions/UniqueValues"
@@ -127,6 +86,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "In a full definition, Stores is expected to be a list containing allowed items only.",
               "oneOf": [
                 {
                   "$ref": "#/definitions/NoneValue"
@@ -162,6 +122,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "In a full definition, Uses is expected to be a list containing allowed items only.",
               "allOf": [
                 {
                   "$ref": "#/definitions/UniqueValues"
@@ -191,6 +152,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "In a full definition, Allows is expected to be 'none' or a list containing allowed items only.",
               "oneOf": [
                 {
                   "$ref": "#/definitions/NoneValue"
@@ -224,6 +186,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "In a full definition, Retains is expected to be a duration as per ISO8601 or the value 'perpetual'.",
               "allOf": [
                 {
                   "$ref": "#/definitions/SingleValue"
@@ -262,6 +225,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "Honors is expected to be either 'none' or a list of allowed items.",
               "oneOf": [
                 {
                   "$ref": "#/definitions/NoneValue"
@@ -295,6 +259,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "Tracks is expected to be a list containing allowed items only.",
               "allOf": [
                 {
                   "$ref": "#/definitions/UniqueValues"
@@ -328,6 +293,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "Varies is expected to be a single, allowed value.",
               "allOf": [
                 {
                   "$ref": "#/definitions/SingleValue"
@@ -356,6 +322,7 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
+              "errorMessage": "Shares is expected to be a combination of allowed values or 'none'.",
               "oneOf": [
                 {
                   "$ref": "#/definitions/NoneValue"
@@ -390,7 +357,12 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
-              "$ref": "#/definitions/UniqueValues"
+              "errorMessage": "Implements is expected to be a list of unique items.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                }
+              ]
             }
           }
         },
@@ -402,7 +374,12 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
-              "$ref": "#/definitions/UniqueValues"
+              "errorMessage": "Deploys is expected to be a list of unique items.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/UniqueValues"
+                }
+              ]
             }
           }
         }
@@ -418,8 +395,10 @@
       "additionalProperties": false
     },
     {
-      "type": "object",
+      "title": "MinimalDefinition",
       "description": "A file declaring that no data is collected",
+      "type": "object",
+      "errorMessage": "A minimal definition is composed of an Author field and a Collects field with the single value none.",
       "properties": {
         "_ordering": {
           "$ref": "#/definitions/Ordering"
@@ -433,7 +412,21 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
-              "$ref": "#/definitions/Author"
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "errorMessage": "The Author field must contain an optional name and a required email address in 'name-addr' form.",
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  {
+                    "$ref": "#/definitions/name-addr"
+                  }
+                ]
+              }
             }
           }
         },
@@ -446,7 +439,12 @@
               "$ref": "#/definitions/FieldComments"
             },
             "values": {
-              "$ref": "#/definitions/NoneValue"
+              "errorMessage": "In a minimal definition, the only Value in the Collects field must be 'none'.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/NoneValue"
+                }
+              ]
             }
           }
         }
@@ -457,5 +455,53 @@
       ],
       "additionalProperties": false
     }
-  ]
+  ],
+  "definitions": {
+    "FieldComments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "name-addr": {
+      "type": "string",
+      "pattern": "^.+\\s<[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?>$"
+    },
+    "NoneValue": {
+      "description": "A single value 'none' is given",
+      "type": "array",
+      "items": {
+        "enum": [
+          "none"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "SingleValue": {
+      "description": "A single arbitrary string value is given",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "UniqueValues": {
+      "description": "A non-empty list of unique strings",
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "Ordering": {
+      "uniqueItems": true,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
 }
