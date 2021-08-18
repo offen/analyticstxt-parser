@@ -139,7 +139,7 @@ const [subcommand = 'help'] = argv._
     }
 
     case 'draft': {
-      if (!/draft-ring-analyticstxt-0[01]/.test(argv.draft)) {
+      if (!/draft-ring-analyticstxt-0[0-2]/.test(argv.draft)) {
         throw new Error(
           'Received malformed or unknown draft name, cannot continue. ' +
           'Check `drafts` for a list of available documents.'
