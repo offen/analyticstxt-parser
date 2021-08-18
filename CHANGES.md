@@ -1,5 +1,14 @@
 # Changes
 
+## 3.0.0
+
+- [`8625a99`](https://github.com/offen/analyticstxt-parser/commit/8625a99b6d4506ab9b6e14877975a5ad520664db)
+  fix pattern for downloading allowed drafts (Frederik Ring)
+- [`ddba598`](https://github.com/offen/analyticstxt-parser/commit/ddba59830582cb3eb9fda58659b88baefe7dad69)
+  run npm audit fix (Frederik Ring)
+- [`bcdccc1`](https://github.com/offen/analyticstxt-parser/commit/bcdccc1ba933c4541554a0e53185cd273ffb8c7e)
+  adjust schema to match draft version 02 (Frederik Ring)
+
 ## 2.2.0
 
 - [`ea749f7`](https://github.com/offen/analyticstxt-parser/commit/ea749f76b5b4fa55eed414434e19a831df63f592)
