@@ -19,7 +19,7 @@ Uses: javascript
 # Users can also delete their usage data only without opting out
 Allows: opt-in, opt-out
 # Data is retained for 6 months
-Retains: P6M
+Retains: 365 days
 
 # Optional fields
 Honors: none
@@ -56,7 +56,7 @@ Deploys: offen
     },
     Retains: {
       comments: ['Data is retained for 6 months'],
-      values: ['P6M']
+      values: ['365 days']
     },
     Honors: {
       comments: ['Optional fields'],
