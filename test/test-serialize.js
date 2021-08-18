@@ -63,7 +63,7 @@ tape.test('valid: full definition', t => {
     },
     Retains: {
       values: [
-        'P6M'
+        '100 days'
       ],
       comments: [
         'Data is retained for 6 months'
@@ -115,7 +115,7 @@ Uses: javascript
 # Users can also delete their usage data only without opting out
 Allows: opt-in, opt-out
 # Data is retained for 6 months
-Retains: P6M
+Retains: 100 days
 # Optional fields
 Honors: none
 Tracks: sessions, users

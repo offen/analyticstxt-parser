@@ -18,8 +18,8 @@ Stores: first-party-cookies, local-storage
 Uses: javascript
 # Users can also delete their usage data only without opting out
 Allows: opt-in, opt-out
-# Data is retained for 6 months
-Retains: P6M
+# Data is retained forever
+Retains: perpetual
 
 # Optional fields
 Honors: none
@@ -46,7 +46,7 @@ Uses: javascript
 # Users can also delete their usage data only without opting out
 allows: opt-in, opt-out
 # Data is retained for 6 months
-retains: P12Y
+retains: 365 days
 `
   const result = validate(fixture)
   t.equal(result, null)
@@ -108,7 +108,7 @@ Stores: first-party-cookies, local-storage
 Uses: javascript
 # none is not allowed as a value of many
 Allows: opt-in, opt-out, none
-Retains: P6M
+Retains: 120 days
 Honors: none
 Tracks: sessions, users
 Varies: none
@@ -144,7 +144,7 @@ Stores: first-party-cookies, local-storage
 Uses: javascript
 # defined values are expected to be all-lowercase
 Allows: Opt-in, Opt-out
-Retains: P6M
+Retains: 120 days
 Honors: none
 Tracks: sessions, users
 Varies: none
