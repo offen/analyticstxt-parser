@@ -1,3 +1,7 @@
+<a href="https://www.offen.dev/">
+    <img src="https://offen.github.io/press-kit/offen-material/gfx-GitHub-Offen-logo.svg" alt="Offen logo" title="Offen" width="150px"/>
+</a>
+
 # analyticstxt-parser
 
 JSON schema based Node.js library and CLI tool to parse and validate [analytics.txt][] files.
