@@ -9,6 +9,7 @@ const fs = require('fs')
 const readline = require('readline')
 const path = require('path')
 const https = require('https')
+const wordwrap = require('wordwrapjs')
 
 const pkg = require('../package')
 const { mustValidate, mustParse, mustSerialize, mustExplain, defaultVersion } = require('..')
@@ -139,7 +140,7 @@ const [subcommand = 'help'] = argv._
       const content = await ingest(fd)
 
       const result = mustExplain(content, { draftName: argv.draft, lax })
-      return JSON.stringify(result, null, 2)
+      return wordwrap.wrap(result, { width: Math.min(80, process.stdout.columns || Number.MAX_SAFE_INTEGER) })
     }
 
     case 'drafts': {

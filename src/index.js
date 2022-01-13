@@ -9,6 +9,7 @@ const addFormats = require('ajv-formats')
 const addErrors = require('ajv-errors')
 
 const schemas = require('./../schema')
+const explainerTemplate = require('./explainer')
 
 const { defaultVersion } = schemas
 
@@ -99,7 +100,7 @@ function explain (source, { draftName = defaultVersion, lax = false } = {}) {
   if (validationError) {
     return [null, validationError]
   }
-  return toDocument(parsed)
+  return explainAnalyticsTxt(parsed)
 }
 
 /**
@@ -291,9 +292,9 @@ function splitValue (value) {
 * @param {object} source
 * @returns {[string?, Error?]}
  */
-function toDocument (source) {
+function explainAnalyticsTxt (source) {
   try {
-    return [JSON.stringify(source, null, 2), null]
+    return [explainerTemplate(source), null]
   } catch (err) {
     return [null, err]
   }

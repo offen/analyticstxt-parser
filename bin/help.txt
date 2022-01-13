@@ -2,21 +2,21 @@ Usage: analyticstxt [subcommand [...args]] [...flags]
 
 Where subcommand is one of the following:
 
-  validate [filename] [...flags]
+  validate [sourcefile] [...flags]
 
     Checks whether the given file is a valid analytics.txt file.
-    Reads from stdin when `-` is given as the filename.
+    Reads from stdin when `-` is given as the sourcefile.
 
     Flags:
       -d, --draft       Use a non-default version of the draft.
                         This is expected to be the full draft name like
                         `draft-ring-analyticstxt-09`
 
-  parse [filename] [...flags]
+  parse [sourcefile] [...flags]
 
     Parses the given analytics.txt file and outputs its JSON
     representation to stdout. Reads from stdin when `-` is given as the
-    filename.
+    sourcefile.
 
     Flags:
       -d, --draft       Use a non-default version of the draft.
@@ -44,10 +44,10 @@ Where subcommand is one of the following:
 
       -f, --force       Overwrite outfile if it already exists.
 
-  explain [filename] [...flags]
+  explain [sourcefile] [...flags]
 
     Explains the given analytics.txt in prose. Reads from stdin when `-` is
-    given as the filename.
+    given as the sourcefile.
 
     Flags:
       -d, --draft       Use a non-default version of the draft.
