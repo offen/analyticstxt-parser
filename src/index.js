@@ -74,7 +74,7 @@ exports.serialize = serialize
 * @param {object} options
 * @param {string=} options.draftName
 * @param {boolean=} options.lax
-* @returns {[string, Error]}
+* @returns {[string?, Error?]}
  */
 function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
   const validationError = lax ? null : validateWithSchema(source, draftName)
@@ -82,6 +82,24 @@ function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
     return [null, validationError]
   }
   return serializeAnalyticsTxt(source)
+}
+
+exports.explain = explain
+/**
+ * Returns a document explaining the contents of the given analytics.txt
+ * file in human readable prose.
+* @param {string} source
+* @param {object} options
+* @param {string=} options.draftName
+* @param {boolean=} options.lax
+* @returns {[string?, Error?]}
+ */
+function explain (source, { draftName = defaultVersion, lax = false } = {}) {
+  const [parsed, validationError] = parse(source)
+  if (validationError) {
+    return [null, validationError]
+  }
+  return toDocument(parsed)
 }
 
 /**
@@ -265,4 +283,18 @@ function normalizeFieldName (name) {
  */
 function splitValue (value) {
   return value.split(',').map(s => s.trim())
+}
+
+/**
+ * Returns a document explaining the contents of the given analytics.txt
+ * file in human readable prose.
+* @param {object} source
+* @returns {[string?, Error?]}
+ */
+function toDocument (source) {
+  try {
+    return [JSON.stringify(source, null, 2), null]
+  } catch (err) {
+    return [null, err]
+  }
 }

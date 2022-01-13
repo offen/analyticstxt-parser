@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-const { validate, parse, serialize } = require('./src')
+const { validate, parse, serialize, explain } = require('./src')
 const schemas = require('./schema')
 
 module.exports = {
@@ -13,6 +13,8 @@ module.exports = {
   mustParse: throwingOnError(parse),
   serialize: serialize,
   mustSerialize: throwingOnError(serialize),
+  explain: explain,
+  mustExplain: throwingOnError(explain),
   defaultVersion: schemas.defaultVersion,
   schema: schemas[schemas.defaultVersion]
 }
