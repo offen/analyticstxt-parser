@@ -30,7 +30,7 @@ vary drastically.
   result.paragraph(`
 The following is a short summary about an analytics.txt file authored
 by ${Author.values[0]}, focusing on the user-facing consequences of the
-collection of usage data.
+collection of usage data for a specific website or service.
 `)
   return result.toString()
 }
@@ -43,14 +43,14 @@ function renderCollects (Collects) {
     return result.toString()
   }
 
-  result.push('On a visit, the site collects the following data about your visit:')
+  result.push('On a visit, the site collects the following data:')
   const items = {
     url: 'The URL of the page you are visiting. In almost all cases, this will also include a timestamp.',
-    'ip-address': 'The IP address you are currently using. This address might be shared with other users that are on the same network as you. It can be used for reidentication without storing any data on your system.',
-    'geo-location': 'Your geographic location. Depending on the technology used for collecting this information, the resolution might be as low as on country level or very detailed.',
-    'user-agent': 'The User Agent string which discloses information about the browser and the operating system you are using.',
+    'ip-address': 'The IP address you are currently using. This address might be shared with other users that are on the same network as you. It can be used for reidentification without storing any data on your system.',
+    'geo-location': 'Your geographic location. Depending on the technology used for collecting this information, the resolution might be as low as on country level or even very detailed.',
+    'user-agent': 'The User-Agent string which discloses information about the browser and the operating system you are using.',
     fingerprint: 'A fingerprint is a combination of multiple charactersistics of the device you are using. This can be used to uniquely identify the device without having to use client-side storage like cookies.',
-    'device-type': 'The type of your device, i.e. whether it is a mobile device, a tablet or a desktop device. The exact classification will be specific to the tool used.',
+    'device-type': 'The type of your device, i.e. whether it is a mobile device, a tablet or a desktop device. The exact classification of devices will be specific to the tool used.',
     referrer: 'In case you are visiting the site by referral from another site, the source of the referral is being collected.',
     'visit-duration': 'The time spent on the website.',
     'custom-events': 'Custom events are generated on certain user actions, e.g. when you subscribe to a newsletter or similar.',
@@ -70,9 +70,9 @@ function renderStores (Stores) {
   }
   result.push('On a visit, the site stores the following on your device in order to collect usage data:')
   const items = {
-    'first-party-cookies': 'The site is using first party cookies. This can be used to reidentify you on subsequent visits to this site. Cookies usually expire at some point in time or are refreshed on a susbsequent visit. Your browser allows you to delete cookies at any time.',
+    'first-party-cookies': 'The site is using first party cookies. This can be used to reidentify you on subsequent visits. Cookies usually either expire at some point in time or are refreshed on a susbsequent visit. Your browser allows you to block or delete cookies at any time.',
     'third-party-cookies': 'The site is using third party cookies. This can be used to reidentify you on other websites and connect your usage patterns. Third party cookies are blocked by default in many modern browsers.',
-    'local-storage': 'Local Storage is used. This can be used to reidentify you on susbsequent visits to this site, or to temporarily store other data.',
+    'local-storage': 'Local Storage is used. This can be used to reidentify you on susbsequent visits to this site, or to temporarily or permanently store other data.',
     cache: 'The default caching behavior of your browser is used to uniquely identify your device. This can be used to reidentify you across multiple websites.'
   }
   for (const value of values) {
@@ -90,7 +90,7 @@ function renderUses (Uses) {
   }
   result.push('The following technologies are used to collect data about your visit:')
   const items = {
-    javascript: 'The site is using a client side script running on your device to collect data. This theoretically allows for collecting a broad range of information about your device and usage patterns. The Collects section contains further information about what exactly is being collected.',
+    javascript: 'The site is using a client side script running on your device to collect data. Theoretically, this allows for collecting a broad range of information about your device and usage patterns. The Collects section contains further information about what exactly is being collected.',
     pixel: 'The site is using a so-called "tracking pixel" to collect data. This delivers a limited set of data but is very robust and difficult to block.',
     'server-side': 'The site is using server-side technology (e.g. server logs) to collect usage data. The set of data is limited, however this technology cannot be blocked by clients in any way.',
     other: 'The site is using other means of collecting usage data. You can check the comments of the analytics.txt file for further information.'
