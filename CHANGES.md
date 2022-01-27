@@ -1,5 +1,12 @@
 # Changes
 
+## 4.0.0
+
+- [`1b78b3d`](https://github.com/offen/analyticstxt-parser/commit/1b78b3dbbba11d344526bed654928fa8e81b47a6)
+  Adjust to draft-03 (Frederik Ring)
+- [`f80d85a`](https://github.com/offen/analyticstxt-parser/commit/f80d85a2a60655d98d1afe76e116d791b9d1d1a9)
+  Update README.md (Hendrik Niefeld)
+
 ## 3.0.0
 
 - [`8625a99`](https://github.com/offen/analyticstxt-parser/commit/8625a99b6d4506ab9b6e14877975a5ad520664db)
