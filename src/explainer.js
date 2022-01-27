@@ -1,11 +1,11 @@
 module.exports = function (data) {
   const {
-    Author,
-    Collects,
-    Stores,
-    Uses,
-    Allows,
-    Retains
+    Author = { values: [] },
+    Collects = { values: [] },
+    Stores = { values: [] },
+    Uses = { values: [] },
+    Allows = { values: [] },
+    Retains = { values: [] }
   } = data
 
   const result = new Result()
@@ -25,7 +25,9 @@ Website operators collect usage data to measure
 user engagement with their sites and services, identify possible issues and
 improve user experience. The degree to which this affects users' privacy can
 vary drastically.
+`)
 
+  result.paragraph(`
 The following is a short summary about an analytics.txt file authored
 by ${Author.values[0]}, focusing on the user-facing consequences of the
 collection of usage data.
