@@ -1,3 +1,8 @@
+/**
+ * Copyright 2022 - Offen Authors <hioffen@posteo.de>
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 module.exports = function (data) {
   const {
     Author = { values: [] },
@@ -46,14 +51,14 @@ function renderCollects (Collects) {
   result.push('On a visit, the site collects the following data:')
   const items = {
     url: 'The URL of the page you are visiting. In almost all cases, this will also include a timestamp.',
-    'ip-address': 'The IP address you are currently using. This address might be shared with other users that are on the same network as you. It can be used for reidentification without storing any data on your system.',
-    'geo-location': 'Your geographic location. Depending on the technology used for collecting this information, the resolution might be as low as on country level or even very detailed.',
-    'user-agent': 'The User-Agent string which discloses information about the browser and the operating system you are using.',
-    fingerprint: 'A fingerprint is a combination of multiple charactersistics of the device you are using. This can be used to uniquely identify the device without having to use client-side storage like cookies.',
+    'ip-address': 'The IP address you are currently using. It can be used for reidentification without storing any data on your system. This address might be shared with other users that are on the same network as you.',
+    'geo-location': 'Your geographic location. Depending on the technology used for collecting this information, the resolution might be as low as on country level or very detailed (e.g. the city).',
+    'user-agent': 'The User-Agent string, which discloses information about the browser and the operating system you are using.',
+    fingerprint: 'A "fingerprint" is a combination of multiple charactersistics of the device you are using. By recreating this fingerprint on each visit, it can be used to uniquely identify the device without having to use client-side storage like cookies.',
     'device-type': 'The type of your device, i.e. whether it is a mobile device, a tablet or a desktop device. The exact classification of devices will be specific to the tool used.',
     referrer: 'In case you are visiting the site by referral from another site, the source of the referral is being collected.',
     'visit-duration': 'The time spent on the website.',
-    'custom-events': 'Custom events are generated on certain user actions, e.g. when you subscribe to a newsletter or similar.',
+    'custom-events': 'Custom events are recorded on certain, site specific user actions, e.g. when you subscribe to a newsletter or similar.',
     'session-recording': 'Your session on the site is recorded in its entirety. This includes scrolling, mouse movement and any other interaction with the site.'
   }
   for (const value of values) {
@@ -90,8 +95,8 @@ function renderUses (Uses) {
   }
   result.push('The following technologies are used to collect data about your visit:')
   const items = {
-    javascript: 'The site is using a client side script running on your device to collect data. Theoretically, this allows for collecting a broad range of information about your device and usage patterns. The Collects section contains further information about what exactly is being collected.',
-    pixel: 'The site is using a so-called "tracking pixel" to collect data. This delivers a limited set of data but is very robust and difficult to block.',
+    javascript: 'The site is using a client side script running on your device to collect data. Theoretically, this allows for collecting a broad range of information about your device and usage patterns. The "Collects" section contains further information about what exactly is being collected.',
+    pixel: 'The site is using a so-called "tracking pixel" to collect data. This delivers a limited set of data but is very robust and more difficult to block.',
     'server-side': 'The site is using server-side technology (e.g. server logs) to collect usage data. The set of data is limited, however this technology cannot be blocked by clients in any way.',
     other: 'The site is using other means of collecting usage data. You can check the comments of the analytics.txt file for further information.'
 
