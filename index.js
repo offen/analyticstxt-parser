@@ -28,7 +28,7 @@ module.exports = {
  */
 function throwingOnError (baseFn) {
   return function () {
-    const result = baseFn.apply(null, arguments)
+    const result = baseFn.apply(null, [].slice.call(arguments))
     if (Array.isArray(result)) {
       if (result[1]) {
         throw result[1]

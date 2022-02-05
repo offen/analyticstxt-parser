@@ -95,12 +95,12 @@ exports.explain = explain
 * @param {boolean=} options.lax
 * @returns {[string?, Error?]}
  */
-function explain (source, { draftName = defaultVersion, lax = false } = {}) {
+function explain (source, { draftName = defaultVersion, lax = false, format } = {}) {
   const [parsed, validationError] = parse(source)
   if (validationError) {
     return [null, validationError]
   }
-  return explainAnalyticsTxt(parsed)
+  return explainAnalyticsTxt(parsed, format)
 }
 
 /**
@@ -292,9 +292,9 @@ function splitValue (value) {
 * @param {object} source
 * @returns {[string?, Error?]}
  */
-function explainAnalyticsTxt (source) {
+function explainAnalyticsTxt (source, format) {
   try {
-    return [explainerTemplate(source), null]
+    return [explainerTemplate(source, format), null]
   } catch (err) {
     return [null, err]
   }
