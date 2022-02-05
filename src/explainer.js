@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-module.exports = function (data) {
+module.exports = function (data, format = formatMarkdown) {
   const {
     Author = { values: [] },
     Collects = { values: [] },
@@ -13,42 +13,36 @@ module.exports = function (data) {
     Retains = { values: [] }
   } = data
 
-  const result = new Result()
+  const result = []
   result.push(renderIntro(Author))
   result.push(renderCollects(Collects))
   result.push(renderStores(Stores))
   result.push(renderUses(Uses))
   result.push(renderAllows(Allows))
   result.push(renderRetains(Retains))
-  return result.toString()
+  return format(result.filter(Boolean))
 }
 
 function renderIntro (Author) {
-  const result = new Block()
-  result.paragraph(`
-Website operators collect usage data to measure
-user engagement with their sites and services, identify possible issues and
-improve user experience. The degree to which this affects users' privacy can
-vary drastically.
-`)
-
-  result.paragraph(`
-The following is a short summary about an analytics.txt file authored
-by ${Author.values[0]}, focusing on the user-facing consequences of the
-collection of usage data for a specific website or service.
-`)
-  return result.toString()
+  return {
+    headline: null,
+    body: [
+      'Website operators collect usage data to measure user engagement with their sites and services, identify possible issues and improve user experience. The degree to which this affects users\' privacy can vary drastically.',
+      `The following is a short summary about an analytics.txt file authored by ${Author.values[0]}, focusing on the user-facing consequences of the collection of usage data for a specific website or service.`
+    ]
+  }
 }
 
 function renderCollects (Collects) {
-  const result = new Block('Collects')
   const { values } = Collects
   if (!values.length || values[0] === 'none') {
-    result.push('No usage data is being collected when visiting this site.')
-    return result.toString()
+    return {
+      headline: 'Collects',
+      body: ['No usage data is being collected when visiting this site.']
+    }
   }
 
-  result.push('On a visit, the site collects the following data:')
+  const applicableItems = []
   const items = {
     url: 'The URL of the page you are visiting. In almost all cases, this will also include a timestamp.',
     'ip-address': 'The IP address you are currently using. It can be used for reidentification without storing any data on your system. This address might be shared with other users that are on the same network as you.',
@@ -62,18 +56,24 @@ function renderCollects (Collects) {
     'session-recording': 'Your session on the site is recorded in its entirety. This includes scrolling, mouse movement and any other interaction with the site.'
   }
   for (const value of values) {
-    result.push(`- ${items[value]}`)
+    applicableItems.push(items[value])
   }
-  return result.toString()
+  return {
+    headline: 'Collects',
+    body: [
+      'On a visit, the site collects the following data:',
+      applicableItems
+    ]
+  }
 }
 
 function renderStores (Stores) {
-  const result = new Block('Stores')
   const { values } = Stores
   if (!values.length || values[0] === 'none') {
     return null
   }
-  result.push('On a visit, the site stores the following on your device in order to collect usage data:')
+
+  const applicableItems = []
   const items = {
     'first-party-cookies': 'The site is using first party cookies. This can be used to reidentify you on subsequent visits. Cookies usually either expire at some point in time or are refreshed on a susbsequent visit. Your browser allows you to block or delete cookies at any time.',
     'third-party-cookies': 'The site is using third party cookies. This can be used to reidentify you on other websites and connect your usage patterns. Third party cookies are blocked by default in many modern browsers.',
@@ -81,19 +81,25 @@ function renderStores (Stores) {
     cache: 'The default caching behavior of your browser is used to uniquely identify your device. This can be used to reidentify you across multiple websites.'
   }
   for (const value of values) {
-    result.push(`- ${items[value]}`)
+    applicableItems.push(items[value])
   }
 
-  return result.toString()
+  return {
+    headline: 'Stores',
+    body: [
+      'On a visit, the site stores the following on your device in order to collect usage data:',
+      applicableItems
+    ]
+  }
 }
 
 function renderUses (Uses) {
-  const result = new Block('Uses')
   const { values } = Uses
   if (!values.length || values[0] === 'none') {
     return null
   }
-  result.push('The following technologies are used to collect data about your visit:')
+
+  const applicableItems = []
   const items = {
     javascript: 'The site is using a client side script running on your device to collect data. Theoretically, this allows for collecting a broad range of information about your device and usage patterns. The "Collects" section contains further information about what exactly is being collected.',
     pixel: 'The site is using a so-called "tracking pixel" to collect data. This delivers a limited set of data but is very robust and more difficult to block.',
@@ -102,82 +108,91 @@ function renderUses (Uses) {
 
   }
   for (const value of values) {
-    result.push(`- ${items[value]}`)
+    applicableItems.push(items[value])
   }
-  return result.toString()
+  return {
+    headline: 'Uses',
+    body: [
+      'The following technologies are used to collect data about your visit:',
+      applicableItems
+    ]
+  }
 }
 
 function renderAllows (Allows) {
-  const result = new Block('Allows')
-
   const { values } = Allows
   if (!values.length) {
     return null
   }
 
   if (values[0] === 'none') {
-    result.push('The site does not allow you to opt-in or opt-out of data collection. It will try to collect data no matter your preferences.')
-    return result.toString()
+    return {
+      headline: 'Allows',
+      body: [
+        'The site does not allow you to opt-in or opt-out of data collection. It will try to collect data no matter your preferences.'
+      ]
+    }
   }
 
-  result.push('The site allows for the following actions regarding your consent decision:')
+  const applicableItems = []
   const items = {
     'opt-in': 'The site allows you to opt in to the collection of usage data. No usage data is collected before you have actively given consent.',
     'opt-out': 'The site allows you to opt out of data collection at any time.'
   }
   for (const value of values) {
-    result.push(`- ${items[value]}`)
+    applicableItems.push(items[value])
   }
-  return result.toString()
+  return {
+    headline: 'Allows',
+    body: [
+      'The site allows for the following actions regarding your consent decision:',
+      applicableItems
+    ]
+  }
 }
 
 function renderRetains (Retains) {
-  const result = new Block('Retains')
   const { values: [retention] } = Retains
   if (!retention) {
     return null
   }
 
   if (retention === 'perpetual') {
-    result.push('The site is retaining usage data with no set limit.')
-    return result.toString()
+    return {
+      headline: 'Retains',
+      body: [
+        'The site is retaining usage data with no set limit.'
+      ]
+    }
   }
 
   const [days] = retention.match(/^\d+/)
 
-  result.push(`The site is retaining the collected usage data for ${days} days and deleted afterwards.`)
-  return result.toString()
-}
-
-function Block (title) {
-  const result = new Result()
-  this.push = result.push.bind(result)
-  this.paragraph = result.paragraph.bind(result)
-
-  this.toString = function () {
-    const withHeadline = new Result()
-    if (title) {
-      withHeadline.push(`## ${title}`)
-      withHeadline.push('\n')
-    }
-    withHeadline.push(result.toString())
-    return withHeadline.toString() + '\n'
+  return {
+    headline: 'Retains',
+    body: [
+      `The site is retaining the collected usage data for ${days} days and deleted afterwards.`
+    ]
   }
 }
 
-function Result () {
+function formatMarkdown (data) {
   const result = []
-  this.push = function () {
-    result.push.apply(result, [].slice.call(arguments).filter(Boolean))
+  for (const block of data) {
+    if (block.headline) {
+      result.push(`## ${block.headline}`)
+      result.push('')
+    }
+    for (const element of block.body) {
+      if (Array.isArray(element)) {
+        for (const li of element) {
+          result.push(`- ${li}`)
+        }
+      } else {
+        result.push(element)
+      }
+    }
+    result.push('')
   }
-
-  this.paragraph = function (str) {
-    this.push(str.split('\n').join(' '))
-  }
-
-  this.toString = function () {
-    return result
-      .map(r => r.trimStart())
-      .join('\n')
-  }
+  return result.join('\n')
 }
