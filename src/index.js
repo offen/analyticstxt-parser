@@ -92,10 +92,10 @@ exports.explain = explain
 * @param {string} source
 * @param {object} options
 * @param {string=} options.draftName
-* @param {boolean=} options.lax
+* @param {(any) => any=} options.format
 * @returns {[string?, Error?]}
  */
-function explain (source, { draftName = defaultVersion, lax = false, format } = {}) {
+function explain (source, { draftName = defaultVersion, format } = {}) {
   const [parsed, validationError] = parse(source)
   if (validationError) {
     return [null, validationError]

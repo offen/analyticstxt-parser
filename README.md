@@ -32,7 +32,7 @@ analyticstxt help
 
 ### Usage as a library
 
-The following functions are exported by this module.
+The following functions are exported by this module:
 
 #### `validate(content, { draftName? })`
 
@@ -89,6 +89,26 @@ fs.writeFileSync('./analytics.txt', result, 'utf-8')
 ```
 
 This function is also available as the throwing version `mustSerialize`.
+
+#### `explain(content, { draftName?, lax?, format? })`
+
+Explain the given analytics.txt file in human readable prose.
+By default, a Markdown document is returned.
+Pass a custom `format` function to change this behavior.
+
+```js
+const fs = require('fs')
+
+const { explain } = require('@offen/analyticstxt-parser')
+
+const content = fs.readFileSync('./analytics.txt', 'utf-8')
+const [explanation, error] = explain(content)
+if (error) {
+  // given file is not valid
+}
+```
+
+This function is also available as the throwing version `mustExplain`.
 
 ---
 
