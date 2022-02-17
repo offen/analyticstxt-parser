@@ -1,5 +1,30 @@
 # Changes
 
+## 4.1.0
+
+- [`f6cc188`](https://github.com/offen/analyticstxt-parser/commit/f6cc18854b96885f00b781fcbecd832bedf6326d)
+  add basic test for explainer (Frederik Ring)
+- [`ef1becd`](https://github.com/offen/analyticstxt-parser/commit/ef1becd206015091b8ac0ceee5adab114420fb37)
+  add documentation on explain method (Frederik Ring)
+- [`26835bd`](https://github.com/offen/analyticstxt-parser/commit/26835bd5025c60a3df4e56c4c407950e5ac87fdc)
+  render explainer in vue template instead of markdown (Frederik Ring)
+- [`fa80412`](https://github.com/offen/analyticstxt-parser/commit/fa804128e7c960cea3037df83e8948de21d7393e)
+  allow for custom formatting of explanation result (Frederik Ring)
+- [`8656a98`](https://github.com/offen/analyticstxt-parser/commit/8656a98975f9e71efce5005f8fcb243a6278af41)
+  Proof read explainer content (Frederik Ring)
+- [`af4f34f`](https://github.com/offen/analyticstxt-parser/commit/af4f34f7f795a692cf73b9de937b32754ae452fe)
+  Proof read explainer copy (Frederik Ring)
+- [`1bd9f91`](https://github.com/offen/analyticstxt-parser/commit/1bd9f912101ba373a220e95f7566363af63538ad)
+  Handle missing fields on minimal doc (Frederik Ring)
+- [`e4f6a7e`](https://github.com/offen/analyticstxt-parser/commit/e4f6a7eed49bb3bfea202fb131119efe45cd0650)
+  Tweak explainer content according to feedback (Frederik Ring)
+- [`29259f1`](https://github.com/offen/analyticstxt-parser/commit/29259f10b352aa5bd5f394a7782ce21eaa3d8cce)
+  Start adding explainer content (Frederik Ring)
+- [`6753fa7`](https://github.com/offen/analyticstxt-parser/commit/6753fa7eb11b97e0fb94beb53686f022288fd694)
+  add templating for node and browser (Frederik Ring)
+- [`18b41a2`](https://github.com/offen/analyticstxt-parser/commit/18b41a291344ab7e4c2f53664ea5a39a26fa3afb)
+  scaffold explain command (Frederik Ring)
+
 ## 4.0.0
 
 - [`1b78b3d`](https://github.com/offen/analyticstxt-parser/commit/1b78b3dbbba11d344526bed654928fa8e81b47a6)
