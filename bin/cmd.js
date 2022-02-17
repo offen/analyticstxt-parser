@@ -9,9 +9,10 @@ const fs = require('fs')
 const readline = require('readline')
 const path = require('path')
 const https = require('https')
+const wordwrap = require('wordwrapjs')
 
 const pkg = require('../package')
-const { mustValidate, mustParse, mustSerialize, defaultVersion } = require('..')
+const { mustValidate, mustParse, mustSerialize, mustExplain, defaultVersion } = require('..')
 
 const argv = require('minimist')(process.argv.slice(2), {
   alias: {
@@ -116,6 +117,30 @@ const [subcommand = 'help'] = argv._
 
       const result = mustParse(content, { draftName: argv.draft, lax })
       return JSON.stringify(result, null, 2)
+    }
+
+    case 'explain': {
+      const lax = argv.lax
+      const [, file] = argv._
+      const readFromStdin = file === '-'
+      if (!file) {
+        throw new Error(
+          'Passing a file is required when using `explain`. ' +
+          'Use `-` to read from stdin.'
+        )
+      }
+
+      if (!readFromStdin && !fs.existsSync(file)) {
+        throw new Error(
+          `File ${file} does not exist.`
+        )
+      }
+
+      const fd = readFromStdin ? process.stdin : file
+      const content = await ingest(fd)
+
+      const result = mustExplain(content, { draftName: argv.draft, lax })
+      return wordwrap.wrap(result, { width: Math.min(80, process.stdout.columns || Number.MAX_SAFE_INTEGER) })
     }
 
     case 'drafts': {

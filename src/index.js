@@ -9,6 +9,7 @@ const addFormats = require('ajv-formats')
 const addErrors = require('ajv-errors')
 
 const schemas = require('./../schema')
+const explainerTemplate = require('./explainer')
 
 const { defaultVersion } = schemas
 
@@ -74,7 +75,7 @@ exports.serialize = serialize
 * @param {object} options
 * @param {string=} options.draftName
 * @param {boolean=} options.lax
-* @returns {[string, Error]}
+* @returns {[string?, Error?]}
  */
 function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
   const validationError = lax ? null : validateWithSchema(source, draftName)
@@ -82,6 +83,24 @@ function serialize (source, { draftName = defaultVersion, lax = false } = {}) {
     return [null, validationError]
   }
   return serializeAnalyticsTxt(source)
+}
+
+exports.explain = explain
+/**
+ * Returns a document explaining the contents of the given analytics.txt
+ * file in human readable prose.
+* @param {string} source
+* @param {object} options
+* @param {string=} options.draftName
+* @param {(any) => any=} options.format
+* @returns {[string?, Error?]}
+ */
+function explain (source, { draftName = defaultVersion, format } = {}) {
+  const [parsed, validationError] = parse(source)
+  if (validationError) {
+    return [null, validationError]
+  }
+  return explainAnalyticsTxt(parsed, format)
 }
 
 /**
@@ -265,4 +284,18 @@ function normalizeFieldName (name) {
  */
 function splitValue (value) {
   return value.split(',').map(s => s.trim())
+}
+
+/**
+ * Returns a document explaining the contents of the given analytics.txt
+ * file in human readable prose.
+* @param {object} source
+* @returns {[string?, Error?]}
+ */
+function explainAnalyticsTxt (source, format) {
+  try {
+    return [explainerTemplate(source, format), null]
+  } catch (err) {
+    return [null, err]
+  }
 }
