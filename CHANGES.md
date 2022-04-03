@@ -1,5 +1,10 @@
 # Changes
 
+## 4.1.1
+
+- [`8c5a835`](https://github.com/offen/analyticstxt-parser/commit/8c5a8356f396969e7bda6478133a977b86f1ed91)
+  Update minimist to fix Prototype Pollution CVE (Frederik Ring)
+
 ## 4.1.0
 
 - [`f6cc188`](https://github.com/offen/analyticstxt-parser/commit/f6cc18854b96885f00b781fcbecd832bedf6326d)
